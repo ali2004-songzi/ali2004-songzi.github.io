@@ -3,223 +3,579 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大蓝闪蝶 | 3D 数字标本馆</title>
+    <title>自然之眼 | 昆虫分类数字博物馆</title>
     
-    <!-- 引入 model-viewer 组件 -->
+    <!-- 引入 3D 模型组件 -->
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <style>
         :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
+            --primary-color: #d4af37; /* 金色 */
+            --bg-dark: #050505;
+            --card-bg: #111;
             --text-main: #e0e0e0;
-            --text-muted: #a0a0a0;
-            --accent-color: #00bcd4; /* 科技蓝 */
-            --font-serif: "Georgia", "Times New Roman", serif;
-            --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: var(--font-sans);
+        body, html {
             margin: 0;
             padding: 0;
-            line-height: 1.6;
-        }
-
-        /* --- 导航与头部 --- */
-        nav { padding: 20px 50px; display: flex; justify-content: space-between; border-bottom: 1px solid #333; }
-        .logo { font-size: 1.5rem; font-weight: bold; letter-spacing: 1px; color: var(--accent-color); }
-        header { text-align: center; padding: 60px 20px; }
-        header h1 { font-family: var(--font-serif); font-weight: normal; margin: 0; }
-        header p { color: var(--text-muted); margin-top: 10px; }
-
-        /* --- 3D 标本网格 --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
-        
-        .specimen-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* 卡片最小宽度增加 */
-            gap: 50px;
-        }
-
-        /* --- 3D 卡片设计 --- */
-        .specimen-card {
-            background-color: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 12px;
+            width: 100%;
+            height: 100%;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             overflow: hidden;
-            transition: transform 0.3s ease;
+        }
+
+        /* --- 通用工具类 --- */
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.8s ease-in forwards; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 1. 封面界面 (Cover) --- */
+        #cover-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1444080943862-3e0423eb5b57?auto=format&fit=crop&q=80&w=1920') no-repeat center center/cover;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 100;
+            cursor: pointer;
         }
 
-        .specimen-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
+        #cover-screen h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            letter-spacing: 5px;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
 
-        /* 3D 查看器容器 */
-        .model-container {
+        #cover-screen p {
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.9;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+
+        /* --- 2. 主页界面 (Gallery) --- */
+        #main-gallery {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow-y: auto;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+            z-index: 90;
+        }
+
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .gallery-header h2 {
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: var(--primary-color);
+            margin: 0;
+        }
+        
+        .gallery-header p {
+            margin: 10px 0 0;
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        /* --- 分类筛选按钮 (基于你提供的资料) --- */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 40px;
+            padding: 0 10px;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #333;
+            color: #888;
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .card-img-container {
             width: 100%;
-            height: 400px; /* 3D模型展示高度 */
-            background-color: #181818;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .card-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .card:hover .card-img-container img {
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.4rem;
+            color: var(--primary-color);
+        }
+
+        .card-latin {
+            font-style: italic;
+            font-size: 0.9rem;
+            opacity: 0.6;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .card-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            opacity: 0.8;
+            flex-grow: 1;
+        }
+
+        /* --- 3. 详情界面 (Detail) --- */
+        #detail-view {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 95;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(5px);
+        }
+
+        .back-btn {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: white;
+            color: black;
+        }
+
+        .detail-content {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+        }
+
+        .model-container {
+            flex: 1;
+            background: #111;
             position: relative;
-            background-image: radial-gradient(#333 1px, transparent 1px); /* 网格背景 */
-            background-size: 20px 20px;
         }
 
         model-viewer {
             width: 100%;
             height: 100%;
-            --poster-color: transparent;
         }
 
-        /* 信息区域 */
-        .card-content { padding: 30px; }
-        
-        .scientific-name {
-            font-family: var(--font-serif);
+        .info-panel {
+            width: 450px;
+            padding: 40px;
+            overflow-y: auto;
+            background: #111;
+            border-left: 1px solid #333;
+        }
+
+        .info-panel h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-top: 0;
+            font-family: "Georgia", serif;
+        }
+
+        .info-latin {
             font-style: italic;
-            color: var(--accent-color);
-            font-size: 1.2rem;
+            opacity: 0.6;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
         }
 
-        .common-name { margin: 0 0 15px 0; font-family: var(--font-serif); font-size: 1.6rem; }
-        
-        .taxonomy-tag {
-            font-size: 0.8rem;
-            color: var(--text-muted);
+        .info-row {
+            margin-bottom: 25px;
+        }
+
+        .info-label {
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            opacity: 0.5;
+            margin-bottom: 5px;
             display: block;
+            color: #fff;
         }
 
-        .description { color: #ccc; margin-bottom: 25px; font-size: 0.95rem; }
-
-        .meta-data {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            border-top: 1px solid #333;
-            padding-top: 20px;
+        .info-value {
+            font-size: 1.1rem;
+            line-height: 1.6;
         }
-
-        .meta-item strong { display: block; color: #fff; font-size: 0.85rem; margin-bottom: 4px; }
-        .meta-item span { color: var(--text-muted); font-size: 0.85rem; }
 
         /* 移动端适配 */
-        @media (max-width: 600px) {
-            .specimen-grid { grid-template-columns: 1fr; }
-            .model-container { height: 300px; }
+        @media (max-width: 768px) {
+            .detail-content { flex-direction: column; }
+            .model-container { height: 50vh; }
+            .info-panel { width: 100%; height: 50vh; }
+            #cover-screen h1 { font-size: 2.5rem; }
+            .filter-container { gap: 5px; }
+            .filter-btn { padding: 6px 15px; font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">DIGITAL MUSEUM</div>
-        <div class="nav-links">
-            <a href="#" style="color: #fff;">收藏集</a>
-        </div>
-    </nav>
+    <!-- 1. 封面层 -->
+    <div id="cover-screen">
+        <h1>自然之眼</h1>
+        <p>探索微观世界的奇迹</p>
+    </div>
 
-    <header>
-        <h1>3D 数字标本档案</h1>
-        <p>交互式浏览 · 毫米级精度 · 永久保存</p>
-    </header>
-
-    <main class="container">
-        <div id="specimen-container" class="specimen-grid">
-            <!-- 内容将由 JS 生成 -->
+    <!-- 2. 主页层 (标本档案) -->
+    <div id="main-gallery" class="hidden">
+        <div class="gallery-header">
+            <h2>昆虫分类档案</h2>
+            <p>基于生物分类学阶元 · 严谨展示</p>
         </div>
-    </main>
+
+        <!-- 分类筛选栏 -->
+        <div class="filter-container">
+            <button class="filter-btn active" onclick="filterSelection('all', this)">全部</button>
+            <button class="filter-btn" onclick="filterSelection('Coleoptera', this)">鞘翅目 (甲虫)</button>
+            <button class="filter-btn" onclick="filterSelection('Lepidoptera', this)">鳞翅目 (蝶/蛾)</button>
+            <button class="filter-btn" onclick="filterSelection('Orthoptera', this)">直翅目 (蝗/蟋)</button>
+            <button class="filter-btn" onclick="filterSelection('Hymenoptera', this)">膜翅目 (蜂/蚁)</button>
+            <button class="filter-btn" onclick="filterSelection('Odonata', this)">蜻蜓目</button>
+            <button class="filter-btn" onclick="filterSelection('Hemiptera', this)">半翅目 (蝽)</button>
+        </div>
+
+        <div class="card-grid" id="gallery-container">
+            <!-- JS 动态插入卡片 -->
+        </div>
+    </div>
+
+    <!-- 3. 详情层 (3D 观察室) -->
+    <div id="detail-view" class="hidden">
+        <div class="detail-header">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> 返回档案
+            </button>
+        </div>
+        <div class="detail-content">
+            <div class="model-container">
+                <model-viewer id="detail-model" 
+                    src="" 
+                    alt="3D Model"
+                    auto-rotate 
+                    camera-controls 
+                    shadow-intensity="1"
+                    environment-image="neutral"
+                    exposure="1">
+                </model-viewer>
+            </div>
+            <div class="info-panel">
+                <h1 id="detail-name">标本名称</h1>
+                <span id="detail-latin" class="info-latin"></span>
+                
+                <div class="info-row">
+                    <span class="info-label">分类地位</span>
+                    <p class="info-value" id="detail-taxonomy"></p>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">形态特征</span>
+                    <p class="info-value" id="detail-desc"></p>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">生活习性</span>
+                    <p class="info-value" id="detail-habit"></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // --- 数据源配置 ---
+        // --- 数据源 (基于你提供的分类资料) ---
         const specimens = [
             {
-                id: 1,
-                commonName: "大蓝闪蝶",
-                scientificName: "Morpho menelaus",
-                taxonomy: "鳞翅目 · 蛱蝶科",
-                
-                // ⚠️ 重点：这里填写你的 3D 模型文件路径 (.glb 或 .gltf)
-                // 如果没有文件，这里暂时放了一个示例模型链接
-                modelSrc: "c7613296165f80369f132eb6c53b2f5b_tennak.glb", 
-                
-                // 这里是鼠标悬停时显示的静态图片（可选，加载模型前显示）
-                posterImage: "your-image-path.jpg", 
-                
-                description: "大蓝闪蝶是闪蝶属中体型最大的物种之一。通过3D扫描技术，我们完整保留了其翅膀的立体结构色和标本针的插针位置。你可以360度旋转观察其腹面的眼斑细节。",
-                story: "属名“Morpho”源自希腊语，意为“美丽”。",
-                location: "巴西亚马逊",
-                date: "2025.11.12",
-                size: "135mm (翅展)"
+                id: "butterfly",
+                name: "大蓝闪蝶",
+                latin: "Morpho menelaus",
+                category: "Lepidoptera", // 鳞翅目
+                taxonomy: "节肢动物门 → 昆虫纲 → 鳞翅目 → 蛱蝶科",
+                image: "大蓝闪蝶.png",
+                model: "c7613296165f80369f132eb6c53b2f5b_tennak.glb", 
+                shortDesc: "翅膀闪耀着金属般的蓝色光泽，是热带雨林中最耀眼的精灵。",
+                fullDesc: "属名“Morpho”源自希腊语，是爱与美之神阿芙洛狄蒂的称号。其翅膀结构复杂，鳞片能反射光线产生耀眼的结构色，而非色素。",
+                habit: "昼行性，飞行速度极快，主要吸食腐烂果实的汁液。"
             },
-            // 你可以在这里添加更多标本...
+            {
+                id: "beetle",
+                name: "彩虹吉丁虫",
+                latin: "Chrysochroa fulgidissima",
+                category: "Coleoptera", // 鞘翅目
+                taxonomy: "节肢动物门 → 昆虫纲 → 鞘翅目 → 吉丁虫科",
+                image: "https://images.unsplash.com/photo-1559406422-590d5289997b?auto=format&fit=crop&q=80&w=800",
+                model: "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
+                shortDesc: "拥有宝石般绚丽的甲壳，在阳光下呈现出梦幻般的色彩。",
+                fullDesc: "鞘翅目是昆虫界最大的目。吉丁虫的前翅角质化变成硬壳（鞘翅），体表的金属光泽源于甲壳表面的微细凹凸结构对光的干涉。",
+                habit: "幼虫蛀食树木，成虫喜欢停在树顶接受阳光照射，具有趋光性。"
+            },
+            {
+                id: "grasshopper",
+                name: "东亚飞蝗",
+                latin: "Locusta migratoria",
+                category: "Orthoptera", // 直翅目
+                taxonomy: "节肢动物门 → 昆虫纲 → 直翅目 → 蝗科",
+                image: "https://images.unsplash.com/photo-1623998083840-18e765458635?auto=format&fit=crop&q=80&w=800",
+                model: "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
+                shortDesc: "典型的直翅目昆虫，后足发达，善于跳跃，是农业害虫的代表。",
+                fullDesc: "不完全变态昆虫。前翅革质，后翅膜质。具有群居型和散居型两种形态，群居时会形成巨大的蝗群进行迁徙。",
+                habit: "植食性，咀嚼式口器，主要取食禾本科植物叶片。"
+            },
+            {
+                id: "ant",
+                name: "弓背蚁",
+                latin: "Camponotus",
+                category: "Hymenoptera", // 膜翅目
+                taxonomy: "节肢动物门 → 昆虫纲 → 膜翅目 → 蚁科",
+                image: "https://images.unsplash.com/photo-1585110396069-8256d8257545?auto=format&fit=crop&q=80&w=800",
+                model: "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
+                shortDesc: "高度社会化的昆虫，属于膜翅目，与蜜蜂是近亲。",
+                fullDesc: "完全变态昆虫。具有明显的社会性分工（蚁后、工蚁、兵蚁）。触角呈膝状弯曲，腹部有结节。",
+                habit: "杂食性，通常在地下或朽木中筑巢，通过分泌信息素进行交流。"
+            },
+            {
+                id: "dragonfly",
+                name: "绿蜻蜓",
+                latin: "Anax junius",
+                category: "Odonata", // 蜻蜓目
+                taxonomy: "节肢动物门 → 昆虫纲 → 蜻蜓目 → 差翅亚目",
+                image: "https://images.unsplash.com/photo-1569235485462-cd19541462b1?auto=format&fit=crop&q=80&w=800",
+                model: "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
+                shortDesc: "古老的飞行昆虫，属于不完全变态类，幼虫（水虿）生活在水里。",
+                fullDesc: "拥有两对膜质翅膀，脉络呈网状。复眼巨大，由数万只小眼组成，视力极佳，是空中的顶级捕猎者。",
+                habit: "肉食性，捕食蚊子、苍蝇等小型昆虫，飞行技巧高超，可悬停和急转弯。"
+            },
+            {
+                id: "stinkbug",
+                name: "绿蝽",
+                latin: "Nezara viridula",
+                category: "Hemiptera", // 半翅目
+                taxonomy: "节肢动物门 → 昆虫纲 → 半翅目 → 蝽科",
+                image: "https://images.unsplash.com/photo-1605218427368-35b0f7a3a329?auto=format&fit=crop&q=80&w=800",
+                model: "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
+                shortDesc: "俗称“臭板虫”，具有刺吸式口器，受到惊吓会释放难闻气味。",
+                fullDesc: "不完全变态昆虫。前翅基部革质、端部膜质，称为“半鞘翅”。口器特化为针状，用于刺入植物吸取汁液。",
+                habit: "广泛分布于农田和果园，是常见的农业害虫。"
+            }
         ];
 
-        // --- 渲染逻辑 ---
-        const container = document.getElementById('specimen-container');
+        // --- 页面初始化逻辑 (Hash 模式) ---
+        function initApp() {
+            if (window.location.hash) {
+                const hash = window.location.hash.substring(1);
+                if (hash.startsWith('detail-')) {
+                    const id = hash.replace('detail-', '');
+                    showDetailView(id);
+                    return;
+                }
+            }
+            // 默认显示封面
+            showCover();
+        }
 
-        specimens.forEach(item => {
-            const card = document.createElement('article');
-            card.className = 'specimen-card';
+        // --- 视图切换函数 ---
+        function showCover() {
+            document.getElementById('cover-screen').classList.remove('hidden');
+            document.getElementById('main-gallery').classList.add('hidden');
+            document.getElementById('detail-view').classList.add('hidden');
+        }
+
+        function showGallery() {
+            document.getElementById('cover-screen').classList.add('hidden');
+            document.getElementById('main-gallery').classList.remove('hidden');
+            document.getElementById('detail-view').classList.add('hidden');
+            // 如果卡片还没渲染，就渲染一次
+            if (document.getElementById('gallery-container').children.length === 0) {
+                renderGallery('all');
+            }
+        }
+
+        function showDetailView(id) {
+            document.getElementById('cover-screen').classList.add('hidden');
+            document.getElementById('main-gallery').classList.add('hidden');
+            document.getElementById('detail-view').classList.remove('hidden');
             
-            card.innerHTML = `
-                <div class="model-container">
-                    <!-- 
-                       model-src: 你的3D模型地址
-                       camera-controls: 允许鼠标拖拽旋转
-                       touch-action: 允许手机触控
-                       shadow-intensity: 阴影强度
-                       exposure: 曝光度
-                       auto-rotate: 自动旋转展示
-                    -->
-                    <model-viewer 
-                        src="${item.modelSrc}" 
-                        poster="${item.posterImage || ''}"
-                        alt="3D模型：${item.commonName}"
-                        camera-controls 
-                        touch-action="pan-y"
-                        shadow-intensity="1"
-                        exposure="1"
-                        environment-image="neutral"
-                        auto-rotate
-                        rotation-per-second="30deg"
-                        ar
-                        ar-modes="webxr scene-viewer quick-look"
-                    >
-                        <!-- 这里的按钮会在支持AR的设备上显示 -->
-                        <button slot="ar-button" style="background-color: white; color: black; border: none; position: absolute; bottom: 16px; right: 16px; padding: 10px; border-radius: 4px;">
-                            👋 查看增强现实
-                        </button>
-                    </model-viewer>
-                </div>
+            loadDetailView(id);
+            window.location.hash = `detail-${id}`;
+        }
 
-                <div class="card-content">
-                    <span class="scientific-name">${item.scientificName}</span>
-                    <h2 class="common-name">${item.commonName}</h2>
-                    <span class="taxonomy-tag">${item.taxonomy}</span>
-                    
-                    <p class="description">${item.description}</p>
-                    <p style="font-style: italic; color: #888; font-size: 0.9rem; margin-top: -15px; margin-bottom: 25px;">"${item.story}"</p>
-                    
-                    <div class="meta-data">
-                        <div class="meta-item"><strong>采集地</strong><span>${item.location}</span></div>
-                        <div class="meta-item"><strong>采集日</strong><span>${item.date}</span></div>
-                        <div class="meta-item"><strong>标本尺寸</strong><span>${item.size}</span></div>
+        // --- 功能 1: 渲染主页 (支持分类) ---
+        function renderGallery(category) {
+            const container = document.getElementById('gallery-container');
+            container.innerHTML = '';
+
+            let filteredSpecimens;
+            if (category === 'all') {
+                filteredSpecimens = specimens;
+            } else {
+                filteredSpecimens = specimens.filter(s => s.category === category);
+            }
+
+            filteredSpecimens.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card fade-in';
+                card.onclick = () => {
+                    showDetailView(item.id);
+                };
+
+                card.innerHTML = `
+                    <div class="card-img-container">
+                        <img src="${item.image}" alt="${item.name}">
                     </div>
-                </div>
-            `;
+                    <div class="card-content">
+                        <h3>${item.name}</h3>
+                        <span class="card-latin">${item.latin}</span>
+                        <p class="card-desc">${item.shortDesc}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- 功能 2: 分类筛选 ---
+        function filterSelection(category, clickedBtn) {
+            // 更新按钮状态
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            clickedBtn.classList.add('active');
+            // 渲染对应分类
+            renderGallery(category);
+        }
+
+        // --- 功能 3: 加载详情页数据 ---
+        function loadDetailView(id) {
+            const item = specimens.find(s => s.id === id);
+            if (!item) return;
+
+            document.getElementById('detail-name').innerText = item.name;
+            document.getElementById('detail-latin').innerText = item.latin;
+            document.getElementById('detail-taxonomy').innerText = item.taxonomy;
+            document.getElementById('detail-desc').innerText = item.fullDesc;
+            document.getElementById('detail-habit').innerText = item.habit;
             
-            container.appendChild(card);
+            // 设置模型路径
+            const modelViewer = document.getElementById('detail-model');
+            modelViewer.src = item.model; 
+        }
+
+        // --- 功能 4: 交互逻辑 ---
+        
+        // 封面点击事件
+        document.getElementById('cover-screen').addEventListener('click', function() {
+            this.style.opacity = '0';
+            this.style.transition = 'opacity 0.8s';
+            
+            setTimeout(() => {
+                showGallery();
+            }, 500);
         });
+
+        // 返回按钮
+        function goBack() {
+            window.location.hash = '';
+            showGallery();
+        }
+
+        // 监听浏览器的 Hash 变化
+        window.addEventListener('hashchange', () => {
+            if (!window.location.hash) {
+                showGallery();
+            }
+        });
+
+        // 启动应用
+        initApp();
     </script>
 </body>
 </html>
-
-
