@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大蓝闪蝶 | 生物标本档案</title>
+    <title>大蓝闪蝶 | 3D 数字标本馆</title>
+    
+    <!-- 引入 model-viewer 组件 -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
     <style>
-        /* --- 全局样式 --- */
         :root {
             --bg-color: #121212;
             --card-bg: #1e1e1e;
             --text-main: #e0e0e0;
             --text-muted: #a0a0a0;
-            --accent-color: #4db6ac; /* 标本蓝绿色调 */
+            --accent-color: #00bcd4; /* 科技蓝 */
             --font-serif: "Georgia", "Times New Roman", serif;
             --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
@@ -25,200 +28,141 @@
             line-height: 1.6;
         }
 
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
-        a:hover { color: var(--accent-color); }
-
-        /* --- 导航栏 --- */
-        nav {
-            padding: 20px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #333;
-        }
-        .logo { font-size: 1.5rem; font-weight: bold; letter-spacing: 1px; }
-        .nav-links a { margin-left: 20px; font-size: 0.9rem; text-transform: uppercase; }
-
-        /* --- 头部 --- */
-        header {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(to bottom, #1a1a1a, #121212);
-        }
-        header h1 { margin: 0; font-family: var(--font-serif); font-weight: normal; }
+        /* --- 导航与头部 --- */
+        nav { padding: 20px 50px; display: flex; justify-content: space-between; border-bottom: 1px solid #333; }
+        .logo { font-size: 1.5rem; font-weight: bold; letter-spacing: 1px; color: var(--accent-color); }
+        header { text-align: center; padding: 60px 20px; }
+        header h1 { font-family: var(--font-serif); font-weight: normal; margin: 0; }
         header p { color: var(--text-muted); margin-top: 10px; }
 
-        /* --- 标本网格布局 --- */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
+        /* --- 3D 标本网格 --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        
         .specimen-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* 卡片最小宽度增加 */
+            gap: 50px;
         }
 
-        /* --- 标本卡片设计 --- */
+        /* --- 3D 卡片设计 --- */
         .specimen-card {
             background-color: var(--card-bg);
             border: 1px solid #333;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        .specimen-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            border-color: var(--accent-color);
-        }
+        .specimen-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
 
-        .image-container {
+        /* 3D 查看器容器 */
+        .model-container {
             width: 100%;
-            height: 300px;
-            background-color: #000;
-            overflow: hidden;
+            height: 400px; /* 3D模型展示高度 */
+            background-color: #181818;
             position: relative;
+            background-image: radial-gradient(#333 1px, transparent 1px); /* 网格背景 */
+            background-size: 20px 20px;
         }
 
-        .image-container img {
+        model-viewer {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 保持图片比例填充 */
-            transition: transform 0.5s ease;
+            --poster-color: transparent;
         }
 
-        .specimen-card:hover .image-container img {
-            transform: scale(1.05);
-        }
-
-        .card-content {
-            padding: 25px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
+        /* 信息区域 */
+        .card-content { padding: 30px; }
+        
         .scientific-name {
             font-family: var(--font-serif);
             font-style: italic;
             color: var(--accent-color);
-            font-size: 1.1rem;
-            margin-bottom: 5px;
+            font-size: 1.2rem;
             display: block;
+            margin-bottom: 5px;
         }
 
-        .common-name {
-            font-size: 1.5rem;
-            margin: 0 0 15px 0;
-            font-family: var(--font-serif);
-        }
-
+        .common-name { margin: 0 0 15px 0; font-family: var(--font-serif); font-size: 1.6rem; }
+        
         .taxonomy-tag {
             font-size: 0.8rem;
             color: var(--text-muted);
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #333;
-        }
-
-        .description {
-            font-size: 0.95rem;
-            color: #ccc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin-bottom: 20px;
-            flex-grow: 1;
+            display: block;
         }
 
-        .details-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            background: #181818;
-            padding: 15px;
-            border-radius: 4px;
-        }
+        .description { color: #ccc; margin-bottom: 25px; font-size: 0.95rem; }
 
-        .details-list li {
-            margin-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .details-list span { color: #fff; }
-
-        /* --- 页脚 --- */
-        footer {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
+        .meta-data {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
             border-top: 1px solid #333;
-            margin-top: 40px;
+            padding-top: 20px;
+        }
+
+        .meta-item strong { display: block; color: #fff; font-size: 0.85rem; margin-bottom: 4px; }
+        .meta-item span { color: var(--text-muted); font-size: 0.85rem; }
+
+        /* 移动端适配 */
+        @media (max-width: 600px) {
+            .specimen-grid { grid-template-columns: 1fr; }
+            .model-container { height: 300px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 导航 -->
     <nav>
-        <div class="logo">NATURALIS</div>
+        <div class="logo">DIGITAL MUSEUM</div>
         <div class="nav-links">
-            <a href="#">首页</a>
-            <a href="#">收藏系列</a>
-            <a href="#">关于我</a>
+            <a href="#" style="color: #fff;">收藏集</a>
         </div>
     </nav>
 
-    <!-- 头部 -->
     <header>
-        <h1>生物标本收藏集</h1>
-        <p>探索自然之美，定格永恒瞬间</p>
+        <h1>3D 数字标本档案</h1>
+        <p>交互式浏览 · 毫米级精度 · 永久保存</p>
     </header>
 
-    <!-- 主要内容区域 -->
     <main class="container">
         <div id="specimen-container" class="specimen-grid">
-            <!-- 标本卡片将通过 JavaScript 自动插入到这里 -->
+            <!-- 内容将由 JS 生成 -->
         </div>
     </main>
 
-    <!-- 页脚 -->
-    <footer>
-        <p>&copy; 2026 生物标本收藏集。保留所有权利。</p>
-    </footer>
-
-    <!-- 逻辑脚本 -->
     <script>
-        // 1. 数据源：在这里添加你的标本信息
+        // --- 数据源配置 ---
         const specimens = [
             {
                 id: 1,
                 commonName: "大蓝闪蝶",
                 scientificName: "Morpho menelaus",
-                taxonomy: "鳞翅目 / 蛱蝶科 / 闪蝶属",
-                // 这里使用了一个占位图，请替换为您自己的标本照片路径，例如 'images/butterfly.jpg'
-                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Morpho_menelaus_huebneri_MHNT.jpg/800px-Morpho_menelaus_huebneri_MHNT.jpg", 
-                description: "大蓝闪蝶，又名蓝摩尔福蝶、蓝色妖姬，是鳞翅目蛱蝶科闪蝶属中体型最大的物种之一。其翅膀闪耀着金属般的蓝色光泽，这种结构色并非来自色素，而是源于翅膀鳞片的纳米级物理结构对光线的干涉。",
-                story: "属名“Morpho”源自希腊语，是爱与美之神阿芙洛狄蒂的称号，寓意“美丽”。",
+                taxonomy: "鳞翅目 · 蛱蝶科",
+                
+                // ⚠️ 重点：这里填写你的 3D 模型文件路径 (.glb 或 .gltf)
+                // 如果没有文件，这里暂时放了一个示例模型链接
+                modelSrc: "C:\Users\admin\Desktop\c7613296165f80369f132eb6c53b2f5b.glb", 
+                
+                // 这里是鼠标悬停时显示的静态图片（可选，加载模型前显示）
+                posterImage: "your-image-path.jpg", 
+                
+                description: "大蓝闪蝶是闪蝶属中体型最大的物种之一。通过3D扫描技术，我们完整保留了其翅膀的立体结构色和标本针的插针位置。你可以360度旋转观察其腹面的眼斑细节。",
+                story: "属名“Morpho”源自希腊语，意为“美丽”。",
                 location: "巴西亚马逊",
                 date: "2025.11.12",
-                width: "135mm"
+                size: "135mm (翅展)"
             },
-            // 您可以在这里复制上面的块来添加更多标本
-            // {
-            //     commonName: "下一个标本...",
-            //     ...
-            // }
+            // 你可以在这里添加更多标本...
         ];
 
-        // 2. 渲染函数：将数据转换为 HTML
+        // --- 渲染逻辑 ---
         const container = document.getElementById('specimen-container');
 
         specimens.forEach(item => {
@@ -226,22 +170,49 @@
             card.className = 'specimen-card';
             
             card.innerHTML = `
-                <div class="image-container">
-                    <img src="${item.image}" alt="${item.commonName}">
+                <div class="model-container">
+                    <!-- 
+                       model-src: 你的3D模型地址
+                       camera-controls: 允许鼠标拖拽旋转
+                       touch-action: 允许手机触控
+                       shadow-intensity: 阴影强度
+                       exposure: 曝光度
+                       auto-rotate: 自动旋转展示
+                    -->
+                    <model-viewer 
+                        src="${item.modelSrc}" 
+                        poster="${item.posterImage || ''}"
+                        alt="3D模型：${item.commonName}"
+                        camera-controls 
+                        touch-action="pan-y"
+                        shadow-intensity="1"
+                        exposure="1"
+                        environment-image="neutral"
+                        auto-rotate
+                        rotation-per-second="30deg"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                    >
+                        <!-- 这里的按钮会在支持AR的设备上显示 -->
+                        <button slot="ar-button" style="background-color: white; color: black; border: none; position: absolute; bottom: 16px; right: 16px; padding: 10px; border-radius: 4px;">
+                            👋 查看增强现实
+                        </button>
+                    </model-viewer>
                 </div>
+
                 <div class="card-content">
                     <span class="scientific-name">${item.scientificName}</span>
                     <h2 class="common-name">${item.commonName}</h2>
-                    <div class="taxonomy-tag">${item.taxonomy}</div>
+                    <span class="taxonomy-tag">${item.taxonomy}</span>
                     
                     <p class="description">${item.description}</p>
-                    <p class="description" style="font-size: 0.9rem; color: #888; font-style: italic;">"${item.story}"</p>
+                    <p style="font-style: italic; color: #888; font-size: 0.9rem; margin-top: -15px; margin-bottom: 25px;">"${item.story}"</p>
                     
-                    <ul class="details-list">
-                        <li>采集地 <span>${item.location}</span></li>
-                        <li>采集日期 <span>${item.date}</span></li>
-                        <li>翅展 <span>${item.width}</span></li>
-                    </ul>
+                    <div class="meta-data">
+                        <div class="meta-item"><strong>采集地</strong><span>${item.location}</span></div>
+                        <div class="meta-item"><strong>采集日</strong><span>${item.date}</span></div>
+                        <div class="meta-item"><strong>标本尺寸</strong><span>${item.size}</span></div>
+                    </div>
                 </div>
             `;
             
@@ -250,3 +221,5 @@
     </script>
 </body>
 </html>
+
+
