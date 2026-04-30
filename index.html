@@ -42,6 +42,11 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         #cover-screen {
             position: absolute;
             inset: 0;
@@ -484,6 +489,50 @@
             font-size:0.9rem;
         }
 
+        /* 直达过渡层 */
+        #direct-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, rgba(244,247,241,0.92), rgba(232,239,226,0.95));
+            backdrop-filter: blur(8px);
+        }
+
+        .direct-box {
+            width: min(420px, calc(100% - 40px));
+            padding: 34px 28px;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.88);
+            border: 1px solid rgba(69,104,62,0.12);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .spinner {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            border: 4px solid rgba(73,122,69,0.14);
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+
+        .direct-box h2 {
+            margin: 0 0 8px;
+            font-size: 1.4rem;
+            color: var(--primary-dark);
+        }
+
+        .direct-box p {
+            margin: 0;
+            color: var(--soft);
+            line-height: 1.8;
+        }
+
         @media (max-width:980px) {
             .hero-content { grid-template-columns:1fr; }
             .quick-grid { grid-template-columns: repeat(2, 1fr); }
@@ -533,7 +582,7 @@
                 <div>
                     <div class="eyebrow"><i class="fa-solid fa-leaf"></i> 生命分类 · 鳞翅目档案</div>
                     <h2>从动物界到科级目录，逐级认识生命的秩序</h2>
-                    <p>如果 URL 中带有 species 参数，页面会自动跳过封面并直接打开对应物种。</p>
+                    <p>如果 URL 中带有 species 参数，页面会自动跳过封面并显示直达过渡动画。</p>
                     <div class="hero-actions">
                         <button class="btn btn-primary" onclick="document.getElementById('archive').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-sitemap"></i> 进入档案</button>
                         <button class="btn btn-light" onclick="randomExplore()"><i class="fa-solid fa-shuffle"></i> 随机探索</button>
@@ -573,6 +622,14 @@
                 <div class="tree-wrap" id="treeRoot"></div>
             </div>
         </section>
+    </div>
+</div>
+
+<div id="direct-overlay" class="hidden">
+    <div class="direct-box">
+        <div class="spinner"></div>
+        <h2 id="directTitle">正在进入物种页面</h2>
+        <p id="directText">请稍候，正在定位目标物种…</p>
     </div>
 </div>
 
@@ -685,6 +742,7 @@ const treeData = {
 
 const coverScreen = document.getElementById("cover-screen");
 const mainApp = document.getElementById("main-app");
+const directOverlay = document.getElementById("direct-overlay");
 const familyView = document.getElementById("family-view");
 const detailView = document.getElementById("detail-view");
 const treeRoot = document.getElementById("treeRoot");
@@ -692,7 +750,11 @@ const speciesGrid = document.getElementById("speciesGrid");
 const animalModel = document.getElementById("animalModel");
 const searchInput = document.getElementById("searchInput");
 const shareLink = document.getElementById("shareLink");
+const directTitle = document.getElementById("directTitle");
+const directText = document.getElementById("directText");
+
 let currentFamily = null;
+let pendingDirectSpecies = null;
 
 function renderNode(node, keyword, isRoot=false) {
     const selfMatch = !keyword || node.name.toLowerCase().includes(keyword);
@@ -794,6 +856,12 @@ function randomExplore() {
     setTimeout(() => openDetail(index), 350);
 }
 
+function showDirectOverlay(species, familyName, speciesName) {
+    directOverlay.classList.remove("hidden");
+    directTitle.textContent = `正在进入 ${speciesName}`;
+    directText.textContent = `正在定位 ${familyName} · 请稍候…`;
+}
+
 function openFromURL() {
     const params = new URLSearchParams(window.location.search);
     const species = params.get("species");
@@ -801,26 +869,44 @@ function openFromURL() {
 
     const index = animalData.findIndex(item => item.slug === species);
     if (index !== -1) {
-        coverScreen.classList.add("hidden");
-        mainApp.classList.remove("hidden");
-        mainApp.classList.add("fade-in");
-        renderTree();
         const fam = animalData[index].family;
+        const name = animalData[index].name;
+        pendingDirectSpecies = index;
+        showDirectOverlay(species, fam, name);
+
         setTimeout(() => {
+            coverScreen.classList.add("hidden");
+            mainApp.classList.remove("hidden");
+            mainApp.classList.add("fade-in");
+            renderTree();
+        }, 450);
+
+        setTimeout(() => {
+            directTitle.textContent = `正在打开 ${fam}`;
+            directText.textContent = `科视图已定位，正在进入物种详情…`;
             openFamilyView(fam);
-            setTimeout(() => openDetail(index), 250);
-        }, 100);
+        }, 950);
+
+        setTimeout(() => {
+            directTitle.textContent = `即将进入 ${name}`;
+            directText.textContent = `正在完成最后加载…`;
+            openDetail(index);
+        }, 1400);
+
+        setTimeout(() => {
+            directOverlay.classList.add("hidden");
+        }, 1900);
     }
 }
 
 function enterSite() {
+    if (pendingDirectSpecies !== null) return;
     coverScreen.style.opacity = "0";
     setTimeout(() => {
         coverScreen.classList.add("hidden");
         mainApp.classList.remove("hidden");
         mainApp.classList.add("fade-in");
         renderTree();
-        openFromURL();
     }, 600);
 }
 
@@ -831,13 +917,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
     const species = params.get("species");
     if (species) {
-        setTimeout(() => {
-            coverScreen.classList.add("hidden");
-            mainApp.classList.remove("hidden");
-            mainApp.classList.add("fade-in");
-            renderTree();
-            openFromURL();
-        }, 0);
+        pendingDirectSpecies = species;
+        openFromURL();
     }
 });
 </script>
