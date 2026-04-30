@@ -44,7 +44,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ========== 封面页 ========== */
         #cover-screen {
             position: absolute;
             inset: 0;
@@ -103,7 +102,6 @@
             letter-spacing: 0.18em;
         }
 
-        /* ========== 主页面 ========== */
         #main-app {
             position: absolute;
             inset: 0;
@@ -269,66 +267,11 @@
             box-shadow: 0 14px 28px rgba(73,122,69,0.20);
         }
 
-        .btn-primary:hover { transform: translateY(-2px); }
-
         .btn-light {
             background: rgba(255,255,255,0.72);
             color: var(--primary-dark);
             border: 1px solid rgba(69,104,62,0.12);
             backdrop-filter: blur(8px);
-        }
-
-        .btn-light:hover { transform: translateY(-2px); background: rgba(255,255,255,0.92); }
-
-        .hero-right {
-            justify-self: end;
-            width: 100%;
-            max-width: 390px;
-            background: rgba(255,255,255,0.56);
-            border: 1px solid rgba(69,104,62,0.12);
-            border-radius: 28px;
-            padding: 24px;
-            backdrop-filter: blur(12px);
-            box-shadow: var(--shadow);
-        }
-
-        .hero-right h3 {
-            margin: 0 0 10px;
-            color: var(--primary-dark);
-            font-size: 1.22rem;
-        }
-
-        .hero-right p {
-            margin: 0;
-            color: var(--soft);
-            line-height: 1.8;
-            font-size: 0.95rem;
-        }
-
-        .hero-meta {
-            margin-top: 16px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .meta-box {
-            padding: 14px;
-            border-radius: 18px;
-            background: rgba(255,255,255,0.56);
-            border: 1px solid rgba(69,104,62,0.10);
-        }
-
-        .meta-box strong {
-            display: block;
-            font-size: 1.15rem;
-            color: var(--primary-dark);
-            margin-bottom: 5px;
-        }
-
-        .meta-box span {
-            font-size: 0.84rem;
-            color: var(--soft);
         }
 
         .section {
@@ -393,7 +336,6 @@
             font-size: 0.92rem;
         }
 
-        /* ========== 分类树 ========== */
         .tree-wrap {
             display: grid;
             gap: 12px;
@@ -415,9 +357,7 @@
             user-select: none;
         }
 
-        .tree-header:hover {
-            background: rgba(73,122,69,0.05);
-        }
+        .tree-header:hover { background: rgba(73,122,69,0.05); }
 
         .tree-title {
             display: flex;
@@ -442,9 +382,7 @@
             margin-left: 18px;
         }
 
-        .tree-item.open > .tree-children {
-            display: block;
-        }
+        .tree-item.open > .tree-children { display: block; }
 
         .leaf {
             display: flex;
@@ -468,7 +406,6 @@
             color: var(--soft);
         }
 
-        /* ========== 详情页 ========== */
         #detail-view {
             position: absolute;
             inset: 0;
@@ -550,7 +487,6 @@
 
         @media (max-width: 980px) {
             .hero-content { grid-template-columns: 1fr; }
-            .hero-right { justify-self: start; max-width: none; }
             .quick-grid { grid-template-columns: repeat(2, 1fr); }
             .detail-content { flex-direction: column; }
             .model-container { height: 46vh; }
@@ -561,7 +497,7 @@
             .nav-inner { height: auto; padding: 14px 0; flex-wrap: wrap; }
             .hero h2 { font-size: 2.6rem; }
             .hero p { font-size: 1rem; }
-            .hero-meta, .quick-grid { grid-template-columns: 1fr; }
+            .quick-grid { grid-template-columns: 1fr; }
             .shell { width: min(100% - 20px, 1280px); }
             .info-panel { padding: 22px; }
             #cover-screen h1 { letter-spacing: 0.18em; }
@@ -602,11 +538,11 @@
             <section class="hero" id="home">
                 <div class="hero-content">
                     <div class="hero-left">
-                        <div class="eyebrow"><i class="fa-solid fa-leaf"></i> 生命分类 · 动物世界</div>
-                        <h2>从动物界到物种，逐级认识生命的秩序</h2>
+                        <div class="eyebrow"><i class="fa-solid fa-leaf"></i> 生命分类 · 鳞翅目档案</div>
+                        <h2>从动物界到蝴蝶，逐级认识生命的秩序</h2>
                         <p>
                             本馆采用“界—门—纲—目—科—属—种”的层级结构展示动物分类，
-                            以树状档案的方式帮助用户理解生物分类体系。
+                            当前重点收录鳞翅目中典型蝴蝶类群，并支持逐级展开浏览。
                         </p>
                         <div class="hero-actions">
                             <button class="btn btn-primary" onclick="document.getElementById('archive').scrollIntoView({behavior:'smooth'})">
@@ -620,14 +556,12 @@
 
                     <div class="hero-right">
                         <h3>分类方式</h3>
-                        <p>
-                            采用由大到小的层级分类，适合生物学科普、教学展示与数字化博物馆浏览。
-                        </p>
+                        <p>以树状档案呈现动物分类，适合科普展示与生物学学习。</p>
                         <div class="hero-meta">
                             <div class="meta-box"><strong>界</strong><span>动物界</span></div>
-                            <div class="meta-box"><strong>门</strong><span>海绵/节肢/脊索等</span></div>
-                            <div class="meta-box"><strong>纲</strong><span>昆虫纲、鸟纲等</span></div>
-                            <div class="meta-box"><strong>目</strong><span>鳞翅目、鞘翅目等</span></div>
+                            <div class="meta-box"><strong>门</strong><span>节肢动物门</span></div>
+                            <div class="meta-box"><strong>纲</strong><span>昆虫纲</span></div>
+                            <div class="meta-box"><strong>目</strong><span>鳞翅目</span></div>
                         </div>
                     </div>
                 </div>
@@ -638,7 +572,7 @@
                     <div class="section-head">
                         <div>
                             <h3>快速导览</h3>
-                            <p>从动物界、门类到具体物种，逐层了解生物分类</p>
+                            <p>从分类结构到具体蝶类物种，逐层进入</p>
                         </div>
                     </div>
 
@@ -646,22 +580,22 @@
                         <div class="quick-item">
                             <i class="fa-solid fa-sitemap" style="color:var(--accent);font-size:1.4rem;"></i>
                             <h4>层级结构</h4>
-                            <p>支持按界、门、纲、目、科、属、种逐级展开。</p>
+                            <p>支持按界、门、纲、目、科、属、种展开。</p>
                         </div>
                         <div class="quick-item">
                             <i class="fa-solid fa-magnifying-glass" style="color:var(--accent);font-size:1.4rem;"></i>
-                            <h4>查看详情</h4>
-                            <p>点击具体物种，即可进入图文详情页。</p>
+                            <h4>物种查看</h4>
+                            <p>点击每一种蝴蝶即可查看详细信息。</p>
                         </div>
                         <div class="quick-item">
                             <i class="fa-solid fa-cube" style="color:var(--accent);font-size:1.4rem;"></i>
                             <h4>3D 展示</h4>
-                            <p>支持模型展示接口，后续可接入真实标本模型。</p>
+                            <p>保留模型展示接口，后续可接入真实模型。</p>
                         </div>
                         <div class="quick-item">
                             <i class="fa-solid fa-book" style="color:var(--accent);font-size:1.4rem;"></i>
                             <h4>科普档案</h4>
-                            <p>适合做动物分类、自然教育和生物科普展示。</p>
+                            <p>适合用于自然教育与物种认知展示。</p>
                         </div>
                     </div>
                 </div>
@@ -690,7 +624,7 @@
                     </div>
                     <p class="info-value">
                         自然之眼采用层级化的信息组织方式，将动物分类从宏观到微观逐步展开。
-                        后续可继续扩展更多门类、更多物种，以及搜索、收藏、知识问答等功能。
+                        当前已收录多种典型鳞翅目蝶类，后续可继续扩展其它门类与物种。
                     </p>
                 </div>
             </section>
@@ -722,7 +656,7 @@
                     <p class="info-value">-</p>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">形态特征</span>
+                    <span class="info-label">关键特征</span>
                     <p class="info-value">-</p>
                 </div>
                 <div class="info-row">
@@ -740,33 +674,156 @@
     <script>
         const animalData = [
             {
-                name: "蝴蝶",
-                latin: "Papilio",
-                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "凤蝶科", "凤蝶属", "蝴蝶"],
-                traits: "翅膀色彩丰富，多具鳞粉，飞行姿态优雅。",
-                habitat: "花丛、草地、林缘与灌木区。",
-                ecology: "重要的传粉昆虫，指示生态环境质量。",
-                image: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&q=80&w=1200",
+                name: "红颈鸟翼凤蝶",
+                latin: "Trogonoptera brookiana",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "凤蝶科", "鸟翼凤蝶属", "红颈鸟翼凤蝶"],
+                traits: "黑翅带翠绿斑纹，马来西亚国蝶。",
+                habitat: "热带雨林、林缘与湿润山地。",
+                ecology: "具有很高的观赏与生态价值，是热带森林代表性蝶类。",
                 model: ""
             },
             {
-                name: "蜜蜂",
-                latin: "Apis",
-                path: ["动物界", "节肢动物门", "昆虫纲", "膜翅目", "蜜蜂科", "蜜蜂属", "蜜蜂"],
-                traits: "体表密被绒毛，群居性强，善于采集花蜜与花粉。",
-                habitat: "花园、农田、果园与自然草地。",
-                ecology: "高效传粉者，对农业生产和植物繁殖意义重大。",
-                image: "https://images.unsplash.com/photo-1463694775559-eea25626346b?auto=format&fit=crop&q=80&w=1200",
+                name: "爱神凤蝶",
+                latin: "Papilio blumei",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "凤蝶科", "凤蝶属", "爱神凤蝶"],
+                traits: "蓝尾翠凤蝶，翅面具强烈金属蓝绿色光泽。",
+                habitat: "热带林区与山地林缘。",
+                ecology: "典型热带凤蝶类群，具有较强观赏性。",
                 model: ""
             },
             {
-                name: "甲虫",
-                latin: "Coleoptera",
-                path: ["动物界", "节肢动物门", "昆虫纲", "鞘翅目", "甲虫科", "甲虫属", "甲虫"],
-                traits: "前翅角质化形成鞘翅，体表坚硬，适应力强。",
-                habitat: "森林、草地、土壤层与腐殖质环境。",
-                ecology: "部分种类参与分解有机质，对生态循环有作用。",
-                image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1200",
+                name: "纹凤蝶",
+                latin: "Paranticopsis macareus",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "凤蝶科", "纹凤蝶属", "纹凤蝶"],
+                traits: "黑翅带白色/黄色斑纹。",
+                habitat: "森林边缘与低海拔林地。",
+                ecology: "翅纹鲜明，常作为凤蝶类群观察对象。",
+                model: ""
+            },
+            {
+                name: "绿带翠凤蝶（碧凤蝶）",
+                latin: "Papilio maackii",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "凤蝶科", "凤蝶属", "绿带翠凤蝶"],
+                traits: "黑翅带蓝绿光泽与红色眼斑。",
+                habitat: "林地、山地与花木丰富环境。",
+                ecology: "以耀眼的金属光泽著称，观赏性强。",
+                model: ""
+            },
+            {
+                name: "巴黎翠凤蝶",
+                latin: "Papilio paris",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "凤蝶科", "凤蝶属", "巴黎翠凤蝶"],
+                traits: "黑翅带金属蓝绿色大斑。",
+                habitat: "热带与亚热带森林。",
+                ecology: "翅色华丽，是经典的凤蝶代表。",
+                model: ""
+            },
+            {
+                name: "金斑剑凤蝶",
+                latin: "Graphium weiskei",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "凤蝶科", "剑凤蝶属", "金斑剑凤蝶"],
+                traits: "紫/绿/粉三色金属光泽。",
+                habitat: "热带森林与山地环境。",
+                ecology: "色彩极富金属质感，具有较高收藏与研究价值。",
+                model: ""
+            },
+            {
+                name: "柑橘凤蝶",
+                latin: "Papilio xuthus",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "凤蝶科", "凤蝶属", "柑橘凤蝶"],
+                traits: "黑黄相间，带燕尾。",
+                habitat: "园林、果园、城市绿地与林缘。",
+                ecology: "常见蝶类，幼虫常取食芸香科植物。",
+                model: ""
+            },
+            {
+                name: "环纹蛱蝶",
+                latin: "Napeocles jucunda",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "蛱蝶科", "环纹蛱蝶属", "环纹蛱蝶"],
+                traits: "深褐/黑色翅，带蓝色斑纹。",
+                habitat: "林地、湿润灌丛与热带环境。",
+                ecology: "具有拟态枯叶的伪装特征。",
+                model: ""
+            },
+            {
+                name: "大帛斑蝶",
+                latin: "Idea leuconoe",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "斑蝶科", "帛斑蝶属", "大帛斑蝶"],
+                traits: "白翅带黑纹，又称“纸风筝蝶”。",
+                habitat: "热带森林、林缘与花丛。",
+                ecology: "翅形轻盈，飞行缓慢而优雅。",
+                model: ""
+            },
+            {
+                name: "白斑麝凤蝶",
+                latin: "Byasa dasarada",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "凤蝶科", "麝凤蝶属", "白斑麝凤蝶"],
+                traits: "黑翅带白斑，尾突细长。",
+                habitat: "山地林缘与潮湿林区。",
+                ecology: "翅型修长，常见于山区蝶类调查。",
+                model: ""
+            },
+            {
+                name: "宽带青凤蝶",
+                latin: "Graphium sarpedon",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "凤蝶科", "剑凤蝶属", "宽带青凤蝶"],
+                traits: "黑翅带淡绿色宽带。",
+                habitat: "林缘、溪谷与城市绿化带。",
+                ecology: "是较常见的凤蝶类，活动灵巧。",
+                model: ""
+            },
+            {
+                name: "瓦曙凤蝶",
+                latin: "Atrophaneura varuna",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "凤蝶科", "曙凤蝶属", "瓦曙凤蝶"],
+                traits: "全黑翅，尾突短。",
+                habitat: "山地森林与湿润灌丛。",
+                ecology: "黑色翅面具有独特观赏效果。",
+                model: ""
+            },
+            {
+                name: "爪哇凤蝶",
+                latin: "Papilio peranthus",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "凤蝶科", "凤蝶属", "爪哇凤蝶"],
+                traits: "蓝绿色金属光泽凤蝶。",
+                habitat: "热带森林与岛屿生态环境。",
+                ecology: "色泽华丽，常见于热带凤蝶展示中。",
+                model: ""
+            },
+            {
+                name: "六点带蛱蝶",
+                latin: "Athyma punctata",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "蛱蝶科", "带蛱蝶属", "六点带蛱蝶"],
+                traits: "黑白相间的蛱蝶。",
+                habitat: "林缘、灌木丛与山地环境。",
+                ecology: "纹样醒目，便于识别。",
+                model: ""
+            },
+            {
+                name: "闪蝶",
+                latin: "Morpho spp.",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "蛱蝶科", "闪蝶属", "闪蝶"],
+                traits: "包括月神闪蝶、海伦闪蝶、大蓝闪蝶等，标志性金属蓝色。",
+                habitat: "热带雨林。",
+                ecology: "以极强的蓝色金属反光著称，是热带蝶类代表。",
+                model: ""
+            },
+            {
+                name: "幻紫蛱蝶",
+                latin: "Hypolimnas bolina",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "蛱蝶科", "幻紫蛱蝶属", "幻紫蛱蝶"],
+                traits: "黑翅带蓝紫色光泽与白斑。",
+                habitat: "热带、亚热带地区草地与林缘。",
+                ecology: "翅面对比强烈，辨识度高。",
+                model: ""
+            },
+            {
+                name: "粉蝶",
+                latin: "Pieridae spp.",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "粉蝶科", "粉蝶属", "粉蝶"],
+                traits: "白色/淡黄色翅，常见菜粉蝶类。",
+                habitat: "菜园、草地、农田与城市绿地。",
+                ecology: "常见蝶类，对植物生态与农作物观察具有代表性。",
                 model: ""
             }
         ];
@@ -792,44 +849,38 @@
                                         {
                                             name: "凤蝶科",
                                             children: [
-                                                {
-                                                    name: "凤蝶属",
-                                                    children: [
-                                                        { name: "蝴蝶", speciesIndex: 0 }
-                                                    ]
-                                                }
+                                                { name: "红颈鸟翼凤蝶", speciesIndex: 0 },
+                                                { name: "爱神凤蝶", speciesIndex: 1 },
+                                                { name: "纹凤蝶", speciesIndex: 2 },
+                                                { name: "绿带翠凤蝶", speciesIndex: 3 },
+                                                { name: "巴黎翠凤蝶", speciesIndex: 4 },
+                                                { name: "金斑剑凤蝶", speciesIndex: 5 },
+                                                { name: "柑橘凤蝶", speciesIndex: 6 },
+                                                { name: "白斑麝凤蝶", speciesIndex: 9 },
+                                                { name: "宽带青凤蝶", speciesIndex: 10 },
+                                                { name: "瓦曙凤蝶", speciesIndex: 11 },
+                                                { name: "爪哇凤蝶", speciesIndex: 12 }
                                             ]
-                                        }
-                                    ]
-                                },
-                                {
-                                    name: "膜翅目",
-                                    children: [
+                                        },
                                         {
-                                            name: "蜜蜂科",
+                                            name: "蛱蝶科",
                                             children: [
-                                                {
-                                                    name: "蜜蜂属",
-                                                    children: [
-                                                        { name: "蜜蜂", speciesIndex: 1 }
-                                                    ]
-                                                }
+                                                { name: "环纹蛱蝶", speciesIndex: 7 },
+                                                { name: "六点带蛱蝶", speciesIndex: 13 },
+                                                { name: "闪蝶", speciesIndex: 14 },
+                                                { name: "幻紫蛱蝶", speciesIndex: 15 }
                                             ]
-                                        }
-                                    ]
-                                },
-                                {
-                                    name: "鞘翅目",
-                                    children: [
+                                        },
                                         {
-                                            name: "甲虫科",
+                                            name: "斑蝶科",
                                             children: [
-                                                {
-                                                    name: "甲虫属",
-                                                    children: [
-                                                        { name: "甲虫", speciesIndex: 2 }
-                                                    ]
-                                                }
+                                                { name: "大帛斑蝶", speciesIndex: 8 }
+                                            ]
+                                        },
+                                        {
+                                            name: "粉蝶科",
+                                            children: [
+                                                { name: "粉蝶", speciesIndex: 16 }
                                             ]
                                         }
                                     ]
@@ -877,7 +928,7 @@
                             <i class="fa-solid fa-circle-dot" style="color:var(--accent)"></i>
                             <div>
                                 <div>${node.name}</div>
-                                <small>${sp.path.join(" > ")}</small>
+                                <small>${sp.latin} · ${sp.path.join(" > ")}</small>
                             </div>
                         </div>
                     `;
@@ -910,8 +961,7 @@
         }
 
         function toggleTree(headerEl) {
-            const item = headerEl.parentElement;
-            item.classList.toggle("open");
+            headerEl.parentElement.classList.toggle("open");
         }
 
         function openDetail(index) {
