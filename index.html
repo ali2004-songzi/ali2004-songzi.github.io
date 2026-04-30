@@ -363,514 +363,483 @@
             margin-left: 18px;
         }
 
-        .tree-item.open > .tree-children { display: block; }
+        .tree-item.open > .tree-children { display:block; }
 
-        .family-node {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 16px;
-            margin: 8px 0;
-            border-radius: 14px;
-            background: rgba(255,255,255,0.80);
-            border: 1px solid rgba(69,104,62,0.10);
-            cursor: pointer;
+        .tree-leaf {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:14px 16px;
+            margin:8px 0;
+            border-radius:14px;
+            background:rgba(255,255,255,0.80);
+            border:1px solid rgba(69,104,62,0.10);
+            cursor:pointer;
         }
 
-        .family-node:hover {
-            background: rgba(73,122,69,0.07);
-        }
+        .tree-leaf:hover { background: rgba(73,122,69,0.07); }
 
-        .species-grid {
-            display: grid;
-            gap: 12px;
-        }
+        .species-grid { display:grid; gap:12px; }
 
         .species-card {
-            padding: 16px;
-            border: 1px solid rgba(69,104,62,0.12);
-            border-radius: 18px;
-            background: rgba(255,255,255,0.8);
-            cursor: pointer;
+            padding:16px;
+            border:1px solid rgba(69,104,62,0.12);
+            border-radius:18px;
+            background:rgba(255,255,255,0.8);
+            cursor:pointer;
         }
 
-        .species-card h4 {
-            margin: 0 0 6px;
-            color: var(--primary-dark);
-        }
-
-        .species-card .latin {
-            display: block;
-            color: var(--soft);
-            font-style: italic;
-            margin-bottom: 8px;
-        }
+        .species-card h4 { margin:0 0 6px; color:var(--primary-dark); }
+        .species-card .latin { display:block; color:var(--soft); font-style:italic; margin-bottom:8px; }
 
         #family-view, #detail-view {
-            position: absolute;
-            inset: 0;
-            z-index: 95;
-            display: flex;
-            flex-direction: column;
-            background: #f3f7ef;
+            position:absolute;
+            inset:0;
+            z-index:95;
+            display:flex;
+            flex-direction:column;
+            background:#f3f7ef;
         }
 
         .family-header, .detail-header {
-            padding: 16px 20px;
-            background: rgba(255,255,255,0.78);
-            border-bottom: 1px solid rgba(69,104,62,0.10);
+            padding:16px 20px;
+            background:rgba(255,255,255,0.78);
+            border-bottom:1px solid rgba(69,104,62,0.10);
         }
 
         .back-btn {
-            border: 1px solid rgba(69,104,62,0.14);
-            background: white;
-            color: var(--primary-dark);
-            padding: 10px 16px;
-            border-radius: 999px;
-            cursor: pointer;
+            border:1px solid rgba(69,104,62,0.14);
+            background:white;
+            color:var(--primary-dark);
+            padding:10px 16px;
+            border-radius:999px;
+            cursor:pointer;
         }
 
         .family-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 24px;
+            flex:1;
+            overflow-y:auto;
+            padding:24px;
         }
 
         .family-hero {
-            background: rgba(255,255,255,0.8);
-            border: 1px solid rgba(69,104,62,0.12);
-            border-radius: 24px;
-            padding: 22px;
-            margin-bottom: 18px;
+            background:rgba(255,255,255,0.8);
+            border:1px solid rgba(69,104,62,0.12);
+            border-radius:24px;
+            padding:22px;
+            margin-bottom:18px;
         }
 
-        .family-hero h2 {
-            margin: 0 0 8px;
-            color: var(--primary-dark);
-        }
+        .family-hero h2 { margin:0 0 8px; color:var(--primary-dark); }
+        .family-hero p { margin:0; color:var(--soft); line-height:1.8; }
 
-        .family-hero p {
-            margin: 0;
-            color: var(--soft);
-            line-height: 1.8;
-        }
-
-        .detail-content {
-            flex: 1;
-            display: flex;
-            min-height: 0;
-        }
-
-        .model-container {
-            flex: 1;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.42), rgba(228,236,220,0.95));
-            position: relative;
-        }
-
-        .loading-tip {
-            position: absolute;
-            left: 16px;
-            top: 16px;
-            z-index: 2;
-            background: rgba(255,255,255,0.75);
-            padding: 8px 12px;
-            border-radius: 999px;
-            font-size: 0.88rem;
-            color: var(--primary-dark);
-        }
-
-        model-viewer { width: 100%; height: 100%; }
+        .detail-content { flex:1; display:flex; min-height:0; }
+        .model-container { flex:1; background: radial-gradient(circle at center, rgba(255,255,255,0.42), rgba(228,236,220,0.95)); position:relative; }
+        .loading-tip { position:absolute; left:16px; top:16px; z-index:2; background:rgba(255,255,255,0.75); padding:8px 12px; border-radius:999px; font-size:0.88rem; color:var(--primary-dark); }
+        model-viewer { width:100%; height:100%; }
 
         .info-panel {
-            width: 420px;
-            padding: 32px;
-            overflow-y: auto;
-            background: rgba(255,255,255,0.76);
-            border-left: 1px solid rgba(69,104,62,0.10);
+            width:420px;
+            padding:32px;
+            overflow-y:auto;
+            background:rgba(255,255,255,0.76);
+            border-left:1px solid rgba(69,104,62,0.10);
         }
 
-        .info-panel h1 { margin: 0 0 8px; font-size: 2.1rem; color: var(--primary-dark); }
+        .info-panel h1 { margin:0 0 8px; font-size:2.1rem; color:var(--primary-dark); }
         .info-latin {
-            display: block;
-            padding-bottom: 16px;
-            margin-bottom: 24px;
-            border-bottom: 1px solid rgba(69,104,62,0.10);
-            color: #7b8976;
-            font-style: italic;
+            display:block;
+            padding-bottom:16px;
+            margin-bottom:24px;
+            border-bottom:1px solid rgba(69,104,62,0.10);
+            color:#7b8976;
+            font-style:italic;
         }
-        .info-row { margin-bottom: 20px; }
+        .info-row { margin-bottom:20px; }
         .info-label {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--accent);
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            display:block;
+            margin-bottom:6px;
+            color:var(--accent);
+            font-size:0.8rem;
+            letter-spacing:2px;
+            text-transform:uppercase;
         }
-        .info-value { margin: 0; line-height: 1.8; color: #32402d; }
+        .info-value { margin:0; line-height:1.8; color:#32402d; }
 
         .share-box {
-            margin-top: 18px;
-            padding: 14px;
-            border-radius: 16px;
-            background: rgba(73,122,69,0.06);
-            border: 1px dashed rgba(73,122,69,0.18);
+            margin-top:18px;
+            padding:14px;
+            border-radius:16px;
+            background:rgba(73,122,69,0.06);
+            border:1px dashed rgba(73,122,69,0.18);
         }
 
         .share-box input {
-            width: 100%;
-            margin-top: 8px;
-            border: 1px solid rgba(69,104,62,0.14);
-            background: white;
-            padding: 10px 12px;
-            border-radius: 12px;
-            font-size: 0.9rem;
+            width:100%;
+            margin-top:8px;
+            border:1px solid rgba(69,104,62,0.14);
+            background:white;
+            padding:10px 12px;
+            border-radius:12px;
+            font-size:0.9rem;
         }
 
-        @media (max-width: 980px) {
-            .hero-content { grid-template-columns: 1fr; }
+        @media (max-width:980px) {
+            .hero-content { grid-template-columns:1fr; }
             .quick-grid { grid-template-columns: repeat(2, 1fr); }
-            .detail-content { flex-direction: column; }
-            .model-container { height: 46vh; }
-            .info-panel { width: 100%; height: 54vh; }
+            .detail-content { flex-direction:column; }
+            .model-container { height:46vh; }
+            .info-panel { width:100%; height:54vh; }
         }
-
-        @media (max-width: 640px) {
-            .quick-grid { grid-template-columns: 1fr; }
-            .shell { width: min(100% - 20px, 1280px); }
-            .info-panel { padding: 22px; }
+        @media (max-width:640px) {
+            .quick-grid { grid-template-columns:1fr; }
+            .shell { width:min(100% - 20px, 1280px); }
+            .info-panel { padding:22px; }
         }
     </style>
 </head>
 <body>
-    <div id="cover-screen" role="button" tabindex="0">
-        <div class="cover-inner">
-            <h1>自然之眼</h1>
-            <p>探索生命分类的奥秘。<br>点击进入 / Press Enter</p>
-            <div class="cover-hint">ENTER</div>
-        </div>
-    </div>
 
-    <div id="main-app" class="hidden">
-        <header class="navbar">
-            <div class="nav-inner">
-                <div class="brand">
-                    <div class="brand-mark"><i class="fa-solid fa-paw"></i></div>
-                    <div class="brand-text">
-                        <h1>自然之眼</h1>
-                        <span>动物分类数字博物馆</span>
-                    </div>
+<div id="cover-screen" role="button" tabindex="0">
+    <div class="cover-inner">
+        <h1>自然之眼</h1>
+        <p>探索生命分类的奥秘。<br>点击进入 / Press Enter</p>
+        <div class="cover-hint">ENTER</div>
+    </div>
+</div>
+
+<div id="main-app" class="hidden">
+    <header class="navbar">
+        <div class="nav-inner">
+            <div class="brand">
+                <div class="brand-mark"><i class="fa-solid fa-paw"></i></div>
+                <div class="brand-text">
+                    <h1>自然之眼</h1>
+                    <span>动物分类数字博物馆</span>
                 </div>
-                <nav class="nav-links">
-                    <a href="#home">首页</a>
-                    <a href="#archive">档案</a>
-                    <a href="#about">关于</a>
-                    <button class="nav-cta" onclick="document.getElementById('archive').scrollIntoView({behavior:'smooth'})">开始探索</button>
-                </nav>
             </div>
-        </header>
-
-        <div class="shell">
-            <section class="hero" id="home">
-                <div class="hero-content">
-                    <div>
-                        <div class="eyebrow"><i class="fa-solid fa-leaf"></i> 生命分类 · 鳞翅目档案</div>
-                        <h2>从动物界到科级目录，逐级认识生命的秩序</h2>
-                        <p>首页档案目录只显示到“科”，点击某个科后，切换到该科的专属物种视图。</p>
-                        <div class="hero-actions">
-                            <button class="btn btn-primary" onclick="document.getElementById('archive').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-sitemap"></i> 进入档案</button>
-                            <button class="btn btn-light" onclick="randomExplore()"><i class="fa-solid fa-shuffle"></i> 随机探索</button>
-                        </div>
-                    </div>
-                    <div>
-                        <div style="padding:20px;border-radius:20px;background:rgba(255,255,255,0.65);border:1px solid rgba(69,104,62,0.12);">
-                            <h3 style="margin:0 0 8px;color:var(--primary-dark);">当前目录层级</h3>
-                            <p style="margin:0;color:var(--soft);line-height:1.8;">动物界 → 各门类 → 节肢动物门 → 昆虫纲 → 鳞翅目 → 科</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section">
-                <div class="section-card">
-                    <div class="section-head">
-                        <h3>快速导览</h3>
-                        <p>首页保留完整门类；鳞翅目下仅展示到“科”</p>
-                    </div>
-                    <div class="quick-grid">
-                        <div class="quick-item"><h4>完整门类</h4><p>其他门类不会被删除。</p></div>
-                        <div class="quick-item"><h4>科视图</h4><p>点击科后进入该科物种视图。</p></div>
-                        <div class="quick-item"><h4>独立链接</h4><p>每个物种都有专属网址。</p></div>
-                        <div class="quick-item"><h4>物种详情</h4><p>查看特征、环境、生态作用。</p></div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section" id="archive">
-                <div class="section-card">
-                    <div class="section-head">
-                        <h3>动物分类档案</h3>
-                        <p>动物界下保留完整门类；鳞翅目分支只展开到科</p>
-                    </div>
-                    <input id="searchInput" class="search-box" type="text" placeholder="搜索：凤蝶科 / 蛱蝶科 / 粉蝶..." oninput="renderTree()">
-                    <div class="tree-wrap" id="treeRoot"></div>
-                </div>
-            </section>
+            <nav class="nav-links">
+                <a href="#home">首页</a>
+                <a href="#archive">档案</a>
+                <a href="#about">关于</a>
+                <button class="nav-cta" onclick="document.getElementById('archive').scrollIntoView({behavior:'smooth'})">开始探索</button>
+            </nav>
         </div>
-    </div>
+    </header>
 
-    <div id="family-view" class="hidden">
-        <div class="family-header">
-            <button class="back-btn" onclick="closeFamilyView()"><i class="fa-solid fa-arrow-left"></i> 返回目录</button>
-            <button class="back-btn" onclick="goHome()"><i class="fa-solid fa-house"></i> 回到首页</button>
-        </div>
-        <div class="family-content">
-            <div class="family-hero">
-                <h2 id="familyTitle">凤蝶科</h2>
-                <p id="familyDesc">科级视图</p>
+    <div class="shell">
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <div>
+                    <div class="eyebrow"><i class="fa-solid fa-leaf"></i> 生命分类 · 鳞翅目档案</div>
+                    <h2>从动物界到科级目录，逐级认识生命的秩序</h2>
+                    <p>如果 URL 中带有 species 参数，页面会自动跳过封面并直接打开对应物种。</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary" onclick="document.getElementById('archive').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-sitemap"></i> 进入档案</button>
+                        <button class="btn btn-light" onclick="randomExplore()"><i class="fa-solid fa-shuffle"></i> 随机探索</button>
+                    </div>
+                </div>
+                <div>
+                    <div style="padding:20px;border-radius:20px;background:rgba(255,255,255,0.65);border:1px solid rgba(69,104,62,0.12);">
+                        <h3 style="margin:0 0 8px;color:var(--primary-dark);">当前目录层级</h3>
+                        <p style="margin:0;color:var(--soft);line-height:1.8;">动物界 → 各门类 → 节肢动物门 → 昆虫纲 → 鳞翅目 → 科</p>
+                    </div>
+                </div>
             </div>
-            <div class="species-grid" id="speciesGrid"></div>
-        </div>
-    </div>
+        </section>
 
-    <div id="detail-view" class="hidden">
-        <div class="detail-header">
-            <button class="back-btn" onclick="closeDetail()"><i class="fa-solid fa-arrow-left"></i> 返回科视图</button>
-        </div>
-        <div class="detail-content">
-            <div class="model-container">
-                <div class="loading-tip">3D 模型加载区</div>
-                <model-viewer id="animalModel" src="" alt="动物3D模型" camera-controls auto-rotate shadow-intensity="1"></model-viewer>
+        <section class="section">
+            <div class="section-card">
+                <div class="section-head">
+                    <h3>快速导览</h3>
+                    <p>完整门类可展开；鳞翅目下仅展示到“科”</p>
+                </div>
+                <div class="quick-grid">
+                    <div class="quick-item"><h4>完整门类</h4><p>海绵、刺胞、扁形等门类保留。</p></div>
+                    <div class="quick-item"><h4>科视图</h4><p>点击科后进入该科物种视图。</p></div>
+                    <div class="quick-item"><h4>独立链接</h4><p>每个物种都有专属网址。</p></div>
+                    <div class="quick-item"><h4>物种详情</h4><p>查看特征、环境、生态作用。</p></div>
+                </div>
             </div>
-            <aside class="info-panel" id="infoPanel">
-                <h1>物种名称</h1>
-                <span class="info-latin">Latin Name</span>
-                <div class="info-row"><span class="info-label">分类</span><p class="info-value" id="classValue">-</p></div>
-                <div class="info-row"><span class="info-label">物种</span><p class="info-value" id="speciesValue">-</p></div>
-                <div class="info-row"><span class="info-label">关键特征</span><p class="info-value" id="traitsValue">-</p></div>
-                <div class="info-row"><span class="info-label">栖息环境</span><p class="info-value" id="habitatValue">-</p></div>
-                <div class="info-row"><span class="info-label">生态作用</span><p class="info-value" id="ecologyValue">-</p></div>
-                <div class="share-box">
-                    <div class="info-label" style="margin-bottom:4px;">专属网址</div>
-                    <input id="shareLink" readonly value="">
+        </section>
+
+        <section class="section" id="archive">
+            <div class="section-card">
+                <div class="section-head">
+                    <h3>动物分类档案</h3>
+                    <p>各门类可展开；鳞翅目分支只展示到科</p>
                 </div>
-            </aside>
-        </div>
+                <input id="searchInput" class="search-box" type="text" placeholder="搜索：凤蝶科 / 蛱蝶科 / 粉蝶..." oninput="renderTree()">
+                <div class="tree-wrap" id="treeRoot"></div>
+            </div>
+        </section>
     </div>
+</div>
 
-    <script>
-        const animalData = [
-            {name:"红颈鸟翼凤蝶",slug:"trogonoptera-brookiana",latin:"Trogonoptera brookiana",family:"凤蝶科",traits:"黑翅带翠绿斑纹，马来西亚国蝶。",habitat:"热带雨林、林缘与湿润山地。",ecology:"具有很高的观赏与生态价值。",model:""},
-            {name:"爱神凤蝶",slug:"papilio-blumei",latin:"Papilio blumei",family:"凤蝶科",traits:"蓝尾翠凤蝶，翅面具强烈金属蓝绿色光泽。",habitat:"热带林区与山地林缘。",ecology:"典型热带凤蝶类群。",model:""},
-            {name:"纹凤蝶",slug:"paranticopsis-macareus",latin:"Paranticopsis macareus",family:"凤蝶科",traits:"黑翅带白色/黄色斑纹。",habitat:"森林边缘与低海拔林地。",ecology:"翅纹鲜明。",model:""},
-            {name:"绿带翠凤蝶（碧凤蝶）",slug:"papilio-maackii",latin:"Papilio maackii",family:"凤蝶科",traits:"黑翅带蓝绿光泽与红色眼斑。",habitat:"林地、山地与花木丰富环境。",ecology:"以耀眼的金属光泽著称。",model:""},
-            {name:"巴黎翠凤蝶",slug:"papilio-paris",latin:"Papilio paris",family:"凤蝶科",traits:"黑翅带金属蓝绿色大斑。",habitat:"热带与亚热带森林。",ecology:"翅色华丽。",model:""},
-            {name:"金斑剑凤蝶",slug:"graphium-weiskei",latin:"Graphium weiskei",family:"凤蝶科",traits:"紫/绿/粉三色金属光泽。",habitat:"热带森林与山地环境。",ecology:"色彩极富金属质感。",model:""},
-            {name:"柑橘凤蝶",slug:"papilio-xuthus",latin:"Papilio xuthus",family:"凤蝶科",traits:"黑黄相间，带燕尾。",habitat:"园林、果园、城市绿地与林缘。",ecology:"常见蝶类。",model:""},
-            {name:"环纹蛱蝶",slug:"napeocles-jucunda",latin:"Napeocles jucunda",family:"蛱蝶科",traits:"深褐/黑色翅，带蓝色斑纹。",habitat:"林地、湿润灌丛与热带环境。",ecology:"拟态枯叶。",model:""},
-            {name:"大帛斑蝶",slug:"idea-leuconoe",latin:"Idea leuconoe",family:"斑蝶科",traits:"白翅带黑纹，又称“纸风筝蝶”。",habitat:"热带森林、林缘与花丛。",ecology:"飞行优雅。",model:""},
-            {name:"白斑麝凤蝶",slug:"byasa-dasarada",latin:"Byasa dasarada",family:"凤蝶科",traits:"黑翅带白斑，尾突细长。",habitat:"山地林缘与潮湿林区。",ecology:"翅型修长。",model:""},
-            {name:"宽带青凤蝶",slug:"graphium-sarpedon",latin:"Graphium sarpedon",family:"凤蝶科",traits:"黑翅带淡绿色宽带。",habitat:"林缘、溪谷与城市绿化带。",ecology:"较常见的凤蝶类。",model:""},
-            {name:"瓦曙凤蝶",slug:"atrophaneura-varuna",latin:"Atrophaneura varuna",family:"凤蝶科",traits:"全黑翅，尾突短。",habitat:"山地森林与湿润灌丛。",ecology:"黑色翅面具有独特观赏效果。",model:""},
-            {name:"爪哇凤蝶",slug:"papilio-peranthus",latin:"Papilio peranthus",family:"凤蝶科",traits:"蓝绿色金属光泽凤蝶。",habitat:"热带森林与岛屿生态环境。",ecology:"色泽华丽。",model:""},
-            {name:"六点带蛱蝶",slug:"athyma-punctata",latin:"Athyma punctata",family:"蛱蝶科",traits:"黑白相间的蛱蝶。",habitat:"林缘、灌木丛与山地环境。",ecology:"纹样醒目。",model:""},
-            {name:"闪蝶",slug:"morpho-spp",latin:"Morpho spp.",family:"蛱蝶科",traits:"标志性金属蓝色。",habitat:"热带雨林。",ecology:"热带蝶类代表。",model:""},
-            {name:"幻紫蛱蝶",slug:"hypolimnas-bolina",latin:"Hypolimnas bolina",family:"蛱蝶科",traits:"黑翅带蓝紫色光泽与白斑。",habitat:"热带、亚热带地区草地与林缘。",ecology:"辨识度高。",model:""},
-            {name:"粉蝶",slug:"pieridae-spp",latin:"Pieridae spp.",family:"粉蝶科",traits:"白色/淡黄色翅，常见菜粉蝶类。",habitat:"菜园、草地、农田与城市绿地。",ecology:"常见蝶类。",model:""}
-        ];
+<div id="family-view" class="hidden">
+    <div class="family-header">
+        <button class="back-btn" onclick="closeFamilyView()"><i class="fa-solid fa-arrow-left"></i> 返回目录</button>
+        <button class="back-btn" onclick="goHome()"><i class="fa-solid fa-house"></i> 回到首页</button>
+    </div>
+    <div class="family-content">
+        <div class="family-hero">
+            <h2 id="familyTitle">凤蝶科</h2>
+            <p id="familyDesc">科级视图</p>
+        </div>
+        <div class="species-grid" id="speciesGrid"></div>
+    </div>
+</div>
 
-        const familyInfo = {
-            "凤蝶科":"凤蝶科通常体型较大，翅面色彩丰富，许多种类具有明显尾突和华丽光泽。",
-            "蛱蝶科":"蛱蝶科常见于林缘与热带雨林，翅纹变化丰富。",
-            "斑蝶科":"斑蝶科以轻盈飞行和醒目纹样著称。",
-            "粉蝶科":"粉蝶科多为白色或淡黄色蝶类，常见于花园和农田。"
-        };
+<div id="detail-view" class="hidden">
+    <div class="detail-header">
+        <button class="back-btn" onclick="closeDetail()"><i class="fa-solid fa-arrow-left"></i> 返回科视图</button>
+    </div>
+    <div class="detail-content">
+        <div class="model-container">
+            <div class="loading-tip">3D 模型加载区</div>
+            <model-viewer id="animalModel" src="" alt="动物3D模型" camera-controls auto-rotate shadow-intensity="1"></model-viewer>
+        </div>
+        <aside class="info-panel" id="infoPanel">
+            <h1>物种名称</h1>
+            <span class="info-latin">Latin Name</span>
+            <div class="info-row"><span class="info-label">分类</span><p class="info-value" id="classValue">-</p></div>
+            <div class="info-row"><span class="info-label">物种</span><p class="info-value" id="speciesValue">-</p></div>
+            <div class="info-row"><span class="info-label">关键特征</span><p class="info-value" id="traitsValue">-</p></div>
+            <div class="info-row"><span class="info-label">栖息环境</span><p class="info-value" id="habitatValue">-</p></div>
+            <div class="info-row"><span class="info-label">生态作用</span><p class="info-value" id="ecologyValue">-</p></div>
+            <div class="share-box">
+                <div class="info-label" style="margin-bottom:4px;">专属网址</div>
+                <input id="shareLink" readonly value="">
+            </div>
+        </aside>
+    </div>
+</div>
 
-        const familyData = {
-            "凤蝶科":[0,1,2,3,4,5,6,9,10,11,12],
-            "蛱蝶科":[7,13,14,15],
-            "斑蝶科":[8],
-            "粉蝶科":[16]
-        };
+<script>
+const animalData = [
+    {name:"红颈鸟翼凤蝶",slug:"trogonoptera-brookiana",latin:"Trogonoptera brookiana",family:"凤蝶科",traits:"黑翅带翠绿斑纹，马来西亚国蝶。",habitat:"热带雨林、林缘与湿润山地。",ecology:"具有很高的观赏与生态价值。",model:""},
+    {name:"爱神凤蝶",slug:"papilio-blumei",latin:"Papilio blumei",family:"凤蝶科",traits:"蓝尾翠凤蝶，翅面具强烈金属蓝绿色光泽。",habitat:"热带林区与山地林缘。",ecology:"典型热带凤蝶类群。",model:""},
+    {name:"纹凤蝶",slug:"paranticopsis-macareus",latin:"Paranticopsis macareus",family:"凤蝶科",traits:"黑翅带白色/黄色斑纹。",habitat:"森林边缘与低海拔林地。",ecology:"翅纹鲜明。",model:""},
+    {name:"绿带翠凤蝶（碧凤蝶）",slug:"papilio-maackii",latin:"Papilio maackii",family:"凤蝶科",traits:"黑翅带蓝绿光泽与红色眼斑。",habitat:"林地、山地与花木丰富环境。",ecology:"以耀眼的金属光泽著称。",model:""},
+    {name:"巴黎翠凤蝶",slug:"papilio-paris",latin:"Papilio paris",family:"凤蝶科",traits:"黑翅带金属蓝绿色大斑。",habitat:"热带与亚热带森林。",ecology:"翅色华丽。",model:""},
+    {name:"金斑剑凤蝶",slug:"graphium-weiskei",latin:"Graphium weiskei",family:"凤蝶科",traits:"紫/绿/粉三色金属光泽。",habitat:"热带森林与山地环境。",ecology:"色彩极富金属质感。",model:""},
+    {name:"柑橘凤蝶",slug:"papilio-xuthus",latin:"Papilio xuthus",family:"凤蝶科",traits:"黑黄相间，带燕尾。",habitat:"园林、果园、城市绿地与林缘。",ecology:"常见蝶类。",model:""},
+    {name:"环纹蛱蝶",slug:"napeocles-jucunda",latin:"Napeocles jucunda",family:"蛱蝶科",traits:"深褐/黑色翅，带蓝色斑纹。",habitat:"林地、湿润灌丛与热带环境。",ecology:"拟态枯叶。",model:""},
+    {name:"大帛斑蝶",slug:"idea-leuconoe",latin:"Idea leuconoe",family:"斑蝶科",traits:"白翅带黑纹，又称“纸风筝蝶”。",habitat:"热带森林、林缘与花丛。",ecology:"飞行优雅。",model:""},
+    {name:"白斑麝凤蝶",slug:"byasa-dasarada",latin:"Byasa dasarada",family:"凤蝶科",traits:"黑翅带白斑，尾突细长。",habitat:"山地林缘与潮湿林区。",ecology:"翅型修长。",model:""},
+    {name:"宽带青凤蝶",slug:"graphium-sarpedon",latin:"Graphium sarpedon",family:"凤蝶科",traits:"黑翅带淡绿色宽带。",habitat:"林缘、溪谷与城市绿化带。",ecology:"较常见的凤蝶类。",model:""},
+    {name:"瓦曙凤蝶",slug:"atrophaneura-varuna",latin:"Atrophaneura varuna",family:"凤蝶科",traits:"全黑翅，尾突短。",habitat:"山地森林与湿润灌丛。",ecology:"黑色翅面具有独特观赏效果。",model:""},
+    {name:"爪哇凤蝶",slug:"papilio-peranthus",latin:"Papilio peranthus",family:"凤蝶科",traits:"蓝绿色金属光泽凤蝶。",habitat:"热带森林与岛屿生态环境。",ecology:"色泽华丽。",model:""},
+    {name:"六点带蛱蝶",slug:"athyma-punctata",latin:"Athyma punctata",family:"蛱蝶科",traits:"黑白相间的蛱蝶。",habitat:"林缘、灌木丛与山地环境。",ecology:"纹样醒目。",model:""},
+    {name:"闪蝶",slug:"morpho-spp",latin:"Morpho spp.",family:"蛱蝶科",traits:"标志性金属蓝色。",habitat:"热带雨林。",ecology:"热带蝶类代表。",model:""},
+    {name:"幻紫蛱蝶",slug:"hypolimnas-bolina",latin:"Hypolimnas bolina",family:"蛱蝶科",traits:"黑翅带蓝紫色光泽与白斑。",habitat:"热带、亚热带地区草地与林缘。",ecology:"辨识度高。",model:""},
+    {name:"粉蝶",slug:"pieridae-spp",latin:"Pieridae spp.",family:"粉蝶科",traits:"白色/淡黄色翅，常见菜粉蝶类。",habitat:"菜园、草地、农田与城市绿地。",ecology:"常见蝶类。",model:""}
+];
 
-        const coverScreen = document.getElementById("cover-screen");
-        const mainApp = document.getElementById("main-app");
-        const familyView = document.getElementById("family-view");
-        const detailView = document.getElementById("detail-view");
-        const treeRoot = document.getElementById("treeRoot");
-        const speciesGrid = document.getElementById("speciesGrid");
-        const animalModel = document.getElementById("animalModel");
-        const searchInput = document.getElementById("searchInput");
-        const shareLink = document.getElementById("shareLink");
-        let currentFamily = null;
+const familyInfo = {
+    "凤蝶科":"凤蝶科通常体型较大，翅面色彩丰富，许多种类具有明显尾突和华丽光泽。",
+    "蛱蝶科":"蛱蝶科常见于林缘与热带雨林，翅纹变化丰富。",
+    "斑蝶科":"斑蝶科以轻盈飞行和醒目纹样著称。",
+    "粉蝶科":"粉蝶科多为白色或淡黄色蝶类，常见于花园和农田。"
+};
 
-        function enterSite() {
-            coverScreen.style.opacity = "0";
-            setTimeout(() => {
-                coverScreen.classList.add("hidden");
-                mainApp.classList.remove("hidden");
-                mainApp.classList.add("fade-in");
-                renderTree();
-            }, 600);
-        }
+const familyData = {
+    "凤蝶科":[0,1,2,3,4,5,6,9,10,11,12],
+    "蛱蝶科":[7,13,14,15],
+    "斑蝶科":[8],
+    "粉蝶科":[16]
+};
 
-        coverScreen.addEventListener("click", enterSite);
-        coverScreen.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") enterSite();
-        });
+const treeData = {
+    name: "动物界",
+    children: [
+        { name: "海绵动物门", children: [] },
+        { name: "刺胞动物门", children: [] },
+        { name: "扁形动物门", children: [] },
+        { name: "线形动物门", children: [] },
+        { name: "环节动物门", children: [] },
+        { name: "软体动物门", children: [] },
+        {
+            name: "节肢动物门",
+            children: [
+                {
+                    name: "昆虫纲",
+                    children: [
+                        {
+                            name: "鳞翅目",
+                            children: [
+                                { name: "凤蝶科", type: "family" },
+                                { name: "蛱蝶科", type: "family" },
+                                { name: "斑蝶科", type: "family" },
+                                { name: "粉蝶科", type: "family" }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        { name: "棘皮动物门", children: [] },
+        { name: "脊索动物门", children: [] }
+    ]
+};
 
-        function renderTree() {
-            const keyword = (searchInput.value || "").trim().toLowerCase();
+const coverScreen = document.getElementById("cover-screen");
+const mainApp = document.getElementById("main-app");
+const familyView = document.getElementById("family-view");
+const detailView = document.getElementById("detail-view");
+const treeRoot = document.getElementById("treeRoot");
+const speciesGrid = document.getElementById("speciesGrid");
+const animalModel = document.getElementById("animalModel");
+const searchInput = document.getElementById("searchInput");
+const shareLink = document.getElementById("shareLink");
+let currentFamily = null;
 
-            const html = `
-                <div class="tree-item open">
-                    <div class="tree-header" onclick="toggleTree(this)">
-                        <div class="tree-title">
-                            <i class="fa-solid fa-folder-tree" style="color:var(--primary)"></i>
-                            <span>动物界</span>
-                        </div>
-                        <span class="tree-badge">完整目录</span>
-                    </div>
-                    <div class="tree-children">
-                        ${renderKingdom(keyword)}
-                    </div>
-                </div>
-            `;
-            treeRoot.innerHTML = html;
-        }
+function renderNode(node, keyword, isRoot=false) {
+    const selfMatch = !keyword || node.name.toLowerCase().includes(keyword);
+    const childrenHTML = (node.children || []).map(ch => renderNode(ch, keyword)).join("");
+    const childHasMatch = childrenHTML.trim().length > 0;
 
-        function renderKingdom(keyword) {
-            const fixedTrees = [
-                "海绵动物门","刺胞动物门","扁形动物门","线形动物门","环节动物门","软体动物门","棘皮动物门","脊索动物门"
-            ];
+    if (!selfMatch && !childHasMatch) return "";
 
-            const miscellaneous = fixedTrees
-                .filter(name => !keyword || name.toLowerCase().includes(keyword))
-                .map(name => `
-                    <div class="family-node" style="cursor:default;">
-                        <div>
-                            <div style="font-weight:600;color:var(--primary-dark)">${name}</div>
-                            <small style="color:var(--soft)">暂无展开内容</small>
-                        </div>
-                    </div>
-                `).join("");
-
-            const arthropoda = `
-                <div class="tree-item open">
-                    <div class="tree-header" onclick="toggleTree(this)">
-                        <div class="tree-title">
-                            <i class="fa-solid fa-folder-tree" style="color:var(--primary)"></i>
-                            <span>节肢动物门 → 昆虫纲 → 鳞翅目</span>
-                        </div>
-                        <span class="tree-badge">4 科</span>
-                    </div>
-                    <div class="tree-children">
-                        ${["凤蝶科","蛱蝶科","斑蝶科","粉蝶科"].filter(name => !keyword || name.toLowerCase().includes(keyword)).map(name => `
-                            <div class="family-node" onclick="openFamilyView('${name}')">
-                                <div>
-                                    <div style="font-weight:600;color:var(--primary-dark)">${name}</div>
-                                    <small style="color:var(--soft)">点击进入该科物种视图</small>
-                                </div>
-                                <span class="tree-badge">${familyData[name].length} 种</span>
-                            </div>
-                        `).join("")}
-                    </div>
-                </div>
-            `;
-
+    if (!node.children || node.children.length === 0) {
+        if (node.type === "family") {
+            const familyName = node.name;
             return `
-                <div class="tree-item open">
-                    <div class="tree-header" onclick="toggleTree(this)">
-                        <div class="tree-title">
-                            <i class="fa-solid fa-folder-tree" style="color:var(--primary)"></i>
-                            <span>各门类</span>
-                        </div>
-                        <span class="tree-badge">保留完整</span>
+                <div class="tree-leaf" onclick="openFamilyView('${familyName}')">
+                    <div>
+                        <div style="font-weight:600;color:var(--primary-dark)">${familyName}</div>
+                        <small>点击进入该科物种视图</small>
                     </div>
-                    <div class="tree-children">
-                        ${miscellaneous}
-                        ${arthropoda}
-                    </div>
+                    <span class="tree-badge">${familyData[familyName].length} 种</span>
                 </div>
             `;
         }
+        return `<div class="tree-leaf" style="cursor:default;"><div><div style="font-weight:600;color:var(--primary-dark)">${node.name}</div><small>暂无下级内容</small></div></div>`;
+    }
 
-        function toggleTree(headerEl) {
-            headerEl.parentElement.classList.toggle("open");
-        }
+    return `
+        <div class="tree-item ${isRoot ? "open" : ""}">
+            <div class="tree-header" onclick="toggleTree(this)">
+                <div class="tree-title">
+                    <i class="fa-solid fa-folder-tree" style="color:var(--primary)"></i>
+                    <span>${node.name}</span>
+                </div>
+                <span class="tree-badge">${node.children.length} 项</span>
+            </div>
+            <div class="tree-children">
+                ${childrenHTML}
+            </div>
+        </div>
+    `;
+}
 
-        function openFamilyView(familyName) {
-            currentFamily = familyName;
-            mainApp.classList.add("hidden");
-            detailView.classList.add("hidden");
-            familyView.classList.remove("hidden");
+function renderTree() {
+    const keyword = (searchInput.value || "").trim().toLowerCase();
+    treeRoot.innerHTML = renderNode(treeData, keyword, true);
+}
 
-            document.getElementById("familyTitle").textContent = familyName;
-            document.getElementById("familyDesc").textContent = familyInfo[familyName] || "该科物种概览。";
+function toggleTree(headerEl) { headerEl.parentElement.classList.toggle("open"); }
 
-            const ids = familyData[familyName] || [];
-            speciesGrid.innerHTML = ids.map(i => {
-                const sp = animalData[i];
-                return `
-                    <div class="species-card" onclick="openDetail(${i})">
-                        <h4>${sp.name}</h4>
-                        <span class="latin">${sp.latin}</span>
-                        <p>${sp.traits}</p>
-                    </div>
-                `;
-            }).join("");
-        }
+function openFamilyView(familyName) {
+    currentFamily = familyName;
+    mainApp.classList.add("hidden");
+    detailView.classList.add("hidden");
+    familyView.classList.remove("hidden");
+    document.getElementById("familyTitle").textContent = familyName;
+    document.getElementById("familyDesc").textContent = familyInfo[familyName] || "该科物种概览。";
+    const ids = familyData[familyName] || [];
+    speciesGrid.innerHTML = ids.map(i => {
+        const sp = animalData[i];
+        return `<div class="species-card" onclick="openDetail(${i})"><h4>${sp.name}</h4><span class="latin">${sp.latin}</span><p>${sp.traits}</p></div>`;
+    }).join("");
+}
 
-        function closeFamilyView() {
-            familyView.classList.add("hidden");
+function closeFamilyView() { familyView.classList.add("hidden"); mainApp.classList.remove("hidden"); }
+function goHome() { detailView.classList.add("hidden"); familyView.classList.add("hidden"); mainApp.classList.remove("hidden"); currentFamily = null; }
+
+function openDetail(index) {
+    const item = animalData[index];
+    familyView.classList.add("hidden");
+    mainApp.classList.add("hidden");
+    detailView.classList.remove("hidden");
+    document.querySelector("#infoPanel h1").textContent = item.name;
+    document.querySelector("#infoPanel .info-latin").textContent = item.latin;
+    document.getElementById("classValue").textContent = item.family;
+    document.getElementById("speciesValue").textContent = item.name;
+    document.getElementById("traitsValue").textContent = item.traits;
+    document.getElementById("habitatValue").textContent = item.habitat;
+    document.getElementById("ecologyValue").textContent = item.ecology;
+
+    const url = new URL(window.location.href);
+    url.searchParams.set("species", item.slug);
+    shareLink.value = url.toString();
+    history.replaceState(null, "", url.toString());
+
+    if (item.model) animalModel.src = item.model;
+    else animalModel.removeAttribute("src");
+}
+
+function closeDetail() {
+    detailView.classList.add("hidden");
+    if (currentFamily) familyView.classList.remove("hidden");
+    else mainApp.classList.remove("hidden");
+    const url = new URL(window.location.href);
+    url.searchParams.delete("species");
+    history.replaceState(null, "", url.toString());
+}
+
+function randomExplore() {
+    const index = Math.floor(Math.random() * animalData.length);
+    openFamilyView(animalData[index].family);
+    setTimeout(() => openDetail(index), 350);
+}
+
+function openFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const species = params.get("species");
+    if (!species) return;
+
+    const index = animalData.findIndex(item => item.slug === species);
+    if (index !== -1) {
+        coverScreen.classList.add("hidden");
+        mainApp.classList.remove("hidden");
+        mainApp.classList.add("fade-in");
+        renderTree();
+        const fam = animalData[index].family;
+        setTimeout(() => {
+            openFamilyView(fam);
+            setTimeout(() => openDetail(index), 250);
+        }, 100);
+    }
+}
+
+function enterSite() {
+    coverScreen.style.opacity = "0";
+    setTimeout(() => {
+        coverScreen.classList.add("hidden");
+        mainApp.classList.remove("hidden");
+        mainApp.classList.add("fade-in");
+        renderTree();
+        openFromURL();
+    }, 600);
+}
+
+coverScreen.addEventListener("click", enterSite);
+coverScreen.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") enterSite(); });
+
+window.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const species = params.get("species");
+    if (species) {
+        setTimeout(() => {
+            coverScreen.classList.add("hidden");
             mainApp.classList.remove("hidden");
-        }
-
-        function openDetail(index) {
-            const item = animalData[index];
-            familyView.classList.add("hidden");
-            mainApp.classList.add("hidden");
-            detailView.classList.remove("hidden");
-
-            document.querySelector("#infoPanel h1").textContent = item.name;
-            document.querySelector("#infoPanel .info-latin").textContent = item.latin;
-            document.getElementById("classValue").textContent = item.family;
-            document.getElementById("speciesValue").textContent = item.name;
-            document.getElementById("traitsValue").textContent = item.traits;
-            document.getElementById("habitatValue").textContent = item.habitat;
-            document.getElementById("ecologyValue").textContent = item.ecology;
-
-            const url = new URL(window.location.href);
-            url.searchParams.set("species", item.slug);
-            shareLink.value = url.toString();
-            history.replaceState(null, "", url.toString());
-
-            if (item.model) animalModel.src = item.model;
-            else animalModel.removeAttribute("src");
-        }
-
-        function closeDetail() {
-            detailView.classList.add("hidden");
-            if (currentFamily) familyView.classList.remove("hidden");
-            else mainApp.classList.remove("hidden");
-
-            const url = new URL(window.location.href);
-            url.searchParams.delete("species");
-            history.replaceState(null, "", url.toString());
-        }
-
-        function goHome() {
-            detailView.classList.add("hidden");
-            familyView.classList.add("hidden");
-            mainApp.classList.remove("hidden");
-            currentFamily = null;
-        }
-
-        function randomExplore() {
-            const index = Math.floor(Math.random() * animalData.length);
-            openFamilyView(animalData[index].family);
-            setTimeout(() => openDetail(index), 350);
-        }
-    </script>
+            mainApp.classList.add("fade-in");
+            renderTree();
+            openFromURL();
+        }, 0);
+    }
+});
+</script>
 </body>
 </html>
