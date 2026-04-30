@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>自然之眼 | 昆虫分类数字博物馆</title>
+    <title>自然之眼 | 动物分类数字博物馆</title>
 
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -44,7 +44,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ========== 极简封面页 ========== */
+        /* ========== 封面页 ========== */
         #cover-screen {
             position: absolute;
             inset: 0;
@@ -55,7 +55,7 @@
             text-align: center;
             background:
                 linear-gradient(rgba(255,255,255,0.18), rgba(245,248,242,0.20)),
-                url('网站主页背景.png')
+                url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&q=80&w=1920')
                 center/cover no-repeat;
             cursor: pointer;
             transition: opacity 0.8s ease;
@@ -87,7 +87,7 @@
 
         #cover-screen p {
             margin: 18px auto 0;
-            max-width: 420px;
+            max-width: 460px;
             font-size: 1.05rem;
             font-weight: 300;
             line-height: 1.9;
@@ -197,12 +197,12 @@
 
         .hero {
             position: relative;
-            min-height: 520px;
+            min-height: 500px;
             border-radius: 32px;
             overflow: hidden;
             background:
                 linear-gradient(115deg, rgba(245,248,242,0.84), rgba(233,241,226,0.56)),
-                url('https://images.unsplash.com/photo-1444080943862-3e0423eb5b57?auto=format&fit=crop&q=80&w=1920') center/cover no-repeat;
+                url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=1920') center/cover no-repeat;
             box-shadow: var(--shadow);
             border: 1px solid rgba(69,104,62,0.10);
         }
@@ -214,15 +214,25 @@
             grid-template-columns: 1.15fr 0.85fr;
             gap: 28px;
             align-items: center;
-            min-height: 520px;
+            min-height: 500px;
             padding: 42px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.62);
+            color: var(--primary-dark);
+            font-size: 0.9rem;
         }
 
         .hero h2 {
             margin: 16px 0 0;
-            font-size: clamp(3rem, 6vw, 5.6rem);
-            line-height: 1.03;
-            letter-spacing: 0.03em;
+            font-size: clamp(2.8rem, 5vw, 5rem);
+            line-height: 1.04;
             color: #20311d;
         }
 
@@ -230,7 +240,7 @@
             margin: 18px 0 0;
             max-width: 560px;
             color: var(--soft);
-            font-size: 1.06rem;
+            font-size: 1.04rem;
             line-height: 1.9;
         }
 
@@ -383,52 +393,82 @@
             font-size: 0.92rem;
         }
 
-        .filter-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .filter-btn {
-            background: rgba(255,255,255,0.8);
-            border: 1px solid rgba(69,104,62,0.12);
-            color: var(--primary-dark);
-            padding: 10px 18px;
-            border-radius: 999px;
-            cursor: pointer;
-        }
-
-        .filter-btn.active, .filter-btn:hover {
-            background: rgba(73,122,69,0.10);
-        }
-
-        .card-grid {
+        /* ========== 分类树 ========== */
+        .tree-wrap {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
-            gap: 20px;
-            margin-top: 16px;
+            gap: 12px;
         }
 
-        .card {
-            background: rgba(255,255,255,0.82);
+        .tree-item {
             border: 1px solid rgba(69,104,62,0.12);
-            border-radius: 22px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.78);
             overflow: hidden;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(30, 54, 25, 0.08);
-            transition: 0.26s ease;
         }
 
-        .card:hover { transform: translateY(-6px); }
+        .tree-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            cursor: pointer;
+            user-select: none;
+        }
 
-        .card-img { height: 180px; overflow: hidden; }
-        .card-img img { width: 100%; height: 100%; object-fit: cover; }
+        .tree-header:hover {
+            background: rgba(73,122,69,0.05);
+        }
 
-        .card-body { padding: 16px 16px 18px; }
-        .card-body h4 { margin: 0 0 6px; color: var(--primary-dark); }
-        .latin { display: block; margin-bottom: 10px; font-style: italic; color: #7c8977; font-size: 0.88rem; }
-        .desc { margin: 0; color: #41513d; line-height: 1.72; font-size: 0.93rem; }
+        .tree-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
 
+        .tree-badge {
+            font-size: 0.8rem;
+            color: var(--soft);
+            background: rgba(73,122,69,0.08);
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+
+        .tree-children {
+            display: none;
+            padding: 0 0 12px 22px;
+            border-left: 1px dashed rgba(69,104,62,0.18);
+            margin-left: 18px;
+        }
+
+        .tree-item.open > .tree-children {
+            display: block;
+        }
+
+        .leaf {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.80);
+            border: 1px solid rgba(69,104,62,0.10);
+            cursor: pointer;
+            transition: 0.22s ease;
+        }
+
+        .leaf:hover {
+            transform: translateX(4px);
+            background: rgba(73,122,69,0.07);
+        }
+
+        .leaf small {
+            color: var(--soft);
+        }
+
+        /* ========== 详情页 ========== */
         #detail-view {
             position: absolute;
             inset: 0;
@@ -462,6 +502,20 @@
         .model-container {
             flex: 1;
             background: radial-gradient(circle at center, rgba(255,255,255,0.42), rgba(228,236,220,0.95));
+            position: relative;
+        }
+
+        .loading-tip {
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            z-index: 2;
+            background: rgba(255,255,255,0.75);
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.88rem;
+            color: var(--primary-dark);
+            backdrop-filter: blur(8px);
         }
 
         model-viewer { width: 100%; height: 100%; }
@@ -495,7 +549,7 @@
         .info-value { margin: 0; line-height: 1.8; color: #32402d; }
 
         @media (max-width: 980px) {
-            .cover-content, .hero-content { grid-template-columns: 1fr; }
+            .hero-content { grid-template-columns: 1fr; }
             .hero-right { justify-self: start; max-width: none; }
             .quick-grid { grid-template-columns: repeat(2, 1fr); }
             .detail-content { flex-direction: column; }
@@ -505,8 +559,8 @@
 
         @media (max-width: 640px) {
             .nav-inner { height: auto; padding: 14px 0; flex-wrap: wrap; }
-            .hero-title, .hero h2 { font-size: 2.6rem; }
-            .hero-subtitle, .hero p { font-size: 1rem; }
+            .hero h2 { font-size: 2.6rem; }
+            .hero p { font-size: 1rem; }
             .hero-meta, .quick-grid { grid-template-columns: 1fr; }
             .shell { width: min(100% - 20px, 1280px); }
             .info-panel { padding: 22px; }
@@ -516,10 +570,10 @@
 </head>
 <body>
 
-    <div id="cover-screen" role="button" tabindex="0" aria-label="进入自然之眼昆虫分类数字博物馆">
+    <div id="cover-screen" role="button" tabindex="0" aria-label="进入自然之眼动物分类数字博物馆">
         <div class="cover-inner">
             <h1>自然之眼</h1>
-            <p>探索微观世界的奇迹。<br>点击进入 / Press Enter</p>
+            <p>探索生命分类的奥秘。<br>点击进入 / Press Enter</p>
             <div class="cover-hint">ENTER</div>
         </div>
     </div>
@@ -528,18 +582,18 @@
         <header class="navbar">
             <div class="nav-inner">
                 <div class="brand">
-                    <div class="brand-mark"><i class="fa-solid fa-bug"></i></div>
+                    <div class="brand-mark"><i class="fa-solid fa-paw"></i></div>
                     <div class="brand-text">
                         <h1>自然之眼</h1>
-                        <span>昆虫分类数字博物馆</span>
+                        <span>动物分类数字博物馆</span>
                     </div>
                 </div>
 
                 <nav class="nav-links">
                     <a href="#home">首页</a>
-                    <a href="#gallery">档案</a>
+                    <a href="#archive">档案</a>
                     <a href="#about">关于</a>
-                    <button class="nav-cta" onclick="showGallery();window.location.hash='gallery'">开始探索</button>
+                    <button class="nav-cta" onclick="document.getElementById('archive').scrollIntoView({behavior:'smooth'})">开始探索</button>
                 </nav>
             </div>
         </header>
@@ -548,14 +602,15 @@
             <section class="hero" id="home">
                 <div class="hero-content">
                     <div class="hero-left">
-                        <div class="eyebrow"><i class="fa-solid fa-leaf"></i> 自然生态 · 昆虫世界</div>
-                        <h2>走进微观自然，发现昆虫世界的秩序与美感</h2>
+                        <div class="eyebrow"><i class="fa-solid fa-leaf"></i> 生命分类 · 动物世界</div>
+                        <h2>从动物界到物种，逐级认识生命的秩序</h2>
                         <p>
-                            这里汇集蝴蝶、蜜蜂、甲虫、蜻蜓等常见昆虫，以清新自然的视觉语言呈现它们在植物、花朵与草丛中的生态身影。
+                            本馆采用“界—门—纲—目—科—属—种”的层级结构展示动物分类，
+                            以树状档案的方式帮助用户理解生物分类体系。
                         </p>
                         <div class="hero-actions">
-                            <button class="btn btn-primary" onclick="showGallery();window.location.hash='gallery'">
-                                <i class="fa-solid fa-arrow-right"></i> 进入档案
+                            <button class="btn btn-primary" onclick="document.getElementById('archive').scrollIntoView({behavior:'smooth'})">
+                                <i class="fa-solid fa-sitemap"></i> 进入档案
                             </button>
                             <button class="btn btn-light" onclick="randomExplore()">
                                 <i class="fa-solid fa-shuffle"></i> 随机探索
@@ -564,15 +619,15 @@
                     </div>
 
                     <div class="hero-right">
-                        <h3>首页视觉定位</h3>
+                        <h3>分类方式</h3>
                         <p>
-                            采用柔和自然色调、充足留白与层次化构图，适合作为现代科普类网页首页。
+                            采用由大到小的层级分类，适合生物学科普、教学展示与数字化博物馆浏览。
                         </p>
                         <div class="hero-meta">
-                            <div class="meta-box"><strong>16:9</strong><span>横幅构图友好</span></div>
-                            <div class="meta-box"><strong>高清</strong><span>写实视觉表达</span></div>
-                            <div class="meta-box"><strong>留白</strong><span>适合标题按钮</span></div>
-                            <div class="meta-box"><strong>自然</strong><span>绿色暖色融合</span></div>
+                            <div class="meta-box"><strong>界</strong><span>动物界</span></div>
+                            <div class="meta-box"><strong>门</strong><span>海绵/节肢/脊索等</span></div>
+                            <div class="meta-box"><strong>纲</strong><span>昆虫纲、鸟纲等</span></div>
+                            <div class="meta-box"><strong>目</strong><span>鳞翅目、鞘翅目等</span></div>
                         </div>
                     </div>
                 </div>
@@ -583,107 +638,60 @@
                     <div class="section-head">
                         <div>
                             <h3>快速导览</h3>
-                            <p>从自然生态、分类知识到数字化观察，快速进入博物馆核心内容</p>
+                            <p>从动物界、门类到具体物种，逐层了解生物分类</p>
                         </div>
                     </div>
 
                     <div class="quick-grid">
                         <div class="quick-item">
-                            <i class="fa-solid fa-microscope" style="color:var(--accent);font-size:1.4rem;"></i>
-                            <h4>分类档案</h4>
-                            <p>按鞘翅目、鳞翅目、直翅目等分类浏览昆虫标本。</p>
+                            <i class="fa-solid fa-sitemap" style="color:var(--accent);font-size:1.4rem;"></i>
+                            <h4>层级结构</h4>
+                            <p>支持按界、门、纲、目、科、属、种逐级展开。</p>
                         </div>
                         <div class="quick-item">
-                            <i class="fa-solid fa-shuffle" style="color:var(--accent);font-size:1.4rem;"></i>
-                            <h4>随机发现</h4>
-                            <p>通过随机探索功能，开启一次意外而有趣的自然邂逅。</p>
+                            <i class="fa-solid fa-magnifying-glass" style="color:var(--accent);font-size:1.4rem;"></i>
+                            <h4>查看详情</h4>
+                            <p>点击具体物种，即可进入图文详情页。</p>
                         </div>
                         <div class="quick-item">
                             <i class="fa-solid fa-cube" style="color:var(--accent);font-size:1.4rem;"></i>
-                            <h4>3D 标本</h4>
-                            <p>结合 3D 模型展示，让观察更接近真实的博物馆体验。</p>
+                            <h4>3D 展示</h4>
+                            <p>支持模型展示接口，后续可接入真实标本模型。</p>
                         </div>
                         <div class="quick-item">
-                            <i class="fa-solid fa-leaf" style="color:var(--accent);font-size:1.4rem;"></i>
-                            <h4>生态记录</h4>
-                            <p>了解昆虫的形态特征、生活习性与生态角色。</p>
+                            <i class="fa-solid fa-book" style="color:var(--accent);font-size:1.4rem;"></i>
+                            <h4>科普档案</h4>
+                            <p>适合做动物分类、自然教育和生物科普展示。</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section class="section">
+            <section class="section" id="archive">
                 <div class="section-card">
                     <div class="section-head">
                         <div>
-                            <h3>数字博物馆简介</h3>
-                            <p>让自然知识以更直观、更沉浸的方式呈现</p>
+                            <h3>动物分类档案</h3>
+                            <p>点击门类展开下级分类，点击物种查看详细信息</p>
                         </div>
                     </div>
 
-                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
-                        <div class="quick-item">
-                            <h4>严谨分类</h4>
-                            <p>依据生物分类学阶元组织内容，帮助建立清晰的昆虫知识框架。</p>
-                        </div>
-                        <div class="quick-item">
-                            <h4>沉浸体验</h4>
-                            <p>结合图片、文字与 3D 视图，增强观赏性与探索感。</p>
-                        </div>
-                        <div class="quick-item">
-                            <h4>科普友好</h4>
-                            <p>适合自然科普展示、学校项目介绍以及数字展馆演示。</p>
-                        </div>
-                    </div>
+                    <div class="tree-wrap" id="treeRoot"></div>
                 </div>
             </section>
-
-            <section class="section">
-                <div class="section-card" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
-                    <div>
-                        <h3 style="margin:0 0 8px;color:var(--primary-dark);">开始你的探索</h3>
-                        <p style="margin:0;color:var(--soft);">点击“进入档案”查看全部昆虫，或使用“随机探索”开启一次新的发现。</p>
-                    </div>
-                    <button class="btn btn-primary" onclick="showGallery();window.location.hash='gallery'">
-                        <i class="fa-solid fa-arrow-right"></i> 进入档案
-                    </button>
-                </section>
 
             <section class="section" id="about">
                 <div class="section-card">
                     <div class="section-head">
                         <div>
-                            <h3>关于自然之眼</h3>
-                            <p>一个面向自然科普与数字展示的昆虫分类网页</p>
+                            <h3>关于本馆</h3>
+                            <p>一个适合展示生物分类体系的数字化网页原型</p>
                         </div>
                     </div>
-                    <p style="margin:0;color:var(--soft);line-height:1.9;">
-                        自然之眼旨在通过图片、分类信息、3D 模型与交互式浏览方式，向用户展示昆虫世界的多样性与生态之美。
-                        它既可以作为科普展示网页，也可以作为学校项目、数字展馆或自然博物馆演示页面使用。
+                    <p class="info-value">
+                        自然之眼采用层级化的信息组织方式，将动物分类从宏观到微观逐步展开。
+                        后续可继续扩展更多门类、更多物种，以及搜索、收藏、知识问答等功能。
                     </p>
-                </div>
-            </section>
-
-            <section class="section">
-                <div class="section-card">
-                    <div class="section-head">
-                        <div>
-                            <h3>昆虫分类档案</h3>
-                            <p>基于生物分类学阶元 · 严谨展示</p>
-                        </div>
-                    </div>
-
-                    <div class="filter-container">
-                        <button class="filter-btn active" onclick="filterSelection('all', this)">全部</button>
-                        <button class="filter-btn" onclick="filterSelection('Coleoptera', this)">鞘翅目 (甲虫)</button>
-                        <button class="filter-btn" onclick="filterSelection('Lepidoptera', this)">鳞翅目 (蝶/蛾)</button>
-                        <button class="filter-btn" onclick="filterSelection('Orthoptera', this)">直翅目 (蝗/蟋)</button>
-                        <button class="filter-btn" onclick="filterSelection('Hymenoptera', this)">膜翅目 (蜂/蚁)</button>
-                        <button class="filter-btn" onclick="filterSelection('Odonata', this)">蜻蜓目</button>
-                        <button class="filter-btn" onclick="filterSelection('Hemiptera', this)">半翅目 (蝽)</button>
-                    </div>
-
-                    <div class="card-grid" id="gallery-container"></div>
                 </div>
             </section>
         </div>
@@ -691,236 +699,255 @@
 
     <div id="detail-view" class="hidden">
         <div class="detail-header">
-            <button class="back-btn" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i> 返回档案
-            </button>
+            <button class="back-btn" onclick="closeDetail()"><i class="fa-solid fa-arrow-left"></i> 返回档案</button>
         </div>
-
         <div class="detail-content">
             <div class="model-container">
-                <model-viewer id="detail-model"
+                <div class="loading-tip">3D 模型加载区</div>
+                <model-viewer id="animalModel"
                     src=""
-                    alt="3D Model"
-                    auto-rotate
+                    alt="动物3D模型"
                     camera-controls
+                    auto-rotate
                     shadow-intensity="1"
-                    environment-image="neutral"
-                    exposure="1">
+                    ar
+                    ar-modes="webxr scene-viewer quick-look">
                 </model-viewer>
             </div>
-            <div class="info-panel">
-                <h1 id="detail-name">标本名称</h1>
-                <span id="detail-latin" class="info-latin"></span>
-
+            <aside class="info-panel" id="infoPanel">
+                <h1>物种名称</h1>
+                <span class="info-latin">Latin Name</span>
                 <div class="info-row">
-                    <span class="info-label">分类地位</span>
-                    <p class="info-value" id="detail-taxonomy"></p>
+                    <span class="info-label">分类路径</span>
+                    <p class="info-value">-</p>
                 </div>
-
                 <div class="info-row">
                     <span class="info-label">形态特征</span>
-                    <p class="info-value" id="detail-desc"></p>
+                    <p class="info-value">-</p>
                 </div>
-
                 <div class="info-row">
-                    <span class="info-label">生活习性</span>
-                    <p class="info-value" id="detail-habit"></p>
+                    <span class="info-label">栖息环境</span>
+                    <p class="info-value">-</p>
                 </div>
-            </div>
+                <div class="info-row">
+                    <span class="info-label">生态作用</span>
+                    <p class="info-value">-</p>
+                </div>
+            </aside>
         </div>
     </div>
 
     <script>
-        const specimens = [
+        const animalData = [
             {
-                id: "butterfly",
-                name: "大蓝闪蝶",
-                latin: "Morpho menelaus",
-                category: "Lepidoptera",
-                taxonomy: "节肢动物门 → 昆虫纲 → 鳞翅目 → 蛱蝶科",
-                image: "大蓝闪蝶.png",
-                model: "c7613296165f80369f132eb6c53b2f5b_tennak.glb",
-                shortDesc: "翅膀闪耀着金属般的蓝色光泽，是热带雨林中最耀眼的精灵。",
-                fullDesc: "属名“Morpho”源自希腊语，是爱与美之神阿芙洛狄蒂的称号。其翅膀结构复杂，鳞片能反射光线产生耀眼的结构色，而非色素。",
-                habit: "昼行性，飞行速度极快，主要吸食腐烂果实的汁液。"
+                name: "蝴蝶",
+                latin: "Papilio",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鳞翅目", "凤蝶科", "凤蝶属", "蝴蝶"],
+                traits: "翅膀色彩丰富，多具鳞粉，飞行姿态优雅。",
+                habitat: "花丛、草地、林缘与灌木区。",
+                ecology: "重要的传粉昆虫，指示生态环境质量。",
+                image: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&q=80&w=1200",
+                model: ""
             },
             {
-                id: "beetle",
-                name: "彩虹吉丁虫",
-                latin: "Chrysochroa fulgidissima",
-                category: "Coleoptera",
-                taxonomy: "节肢动物门 → 昆虫纲 → 鞘翅目 → 吉丁虫科",
-                image: "https://images.unsplash.com/photo-1559406422-590d5289997b?auto=format&fit=crop&q=80&w=800",
-                model: "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
-                shortDesc: "拥有宝石般绚丽的甲壳，在阳光下呈现出梦幻般的色彩。",
-                fullDesc: "鞘翅目是昆虫界最大的目。吉丁虫的前翅角质化变成硬壳（鞘翅），体表的金属光泽源于甲壳表面的微细凹凸结构对光的干涉。",
-                habit: "幼虫蛀食树木，成虫喜欢停在树顶接受阳光照射，具有趋光性。"
+                name: "蜜蜂",
+                latin: "Apis",
+                path: ["动物界", "节肢动物门", "昆虫纲", "膜翅目", "蜜蜂科", "蜜蜂属", "蜜蜂"],
+                traits: "体表密被绒毛，群居性强，善于采集花蜜与花粉。",
+                habitat: "花园、农田、果园与自然草地。",
+                ecology: "高效传粉者，对农业生产和植物繁殖意义重大。",
+                image: "https://images.unsplash.com/photo-1463694775559-eea25626346b?auto=format&fit=crop&q=80&w=1200",
+                model: ""
             },
             {
-                id: "grasshopper",
-                name: "东亚飞蝗",
-                latin: "Locusta migratoria",
-                category: "Orthoptera",
-                taxonomy: "节肢动物门 → 昆虫纲 → 直翅目 → 蝗科",
-                image: "https://images.unsplash.com/photo-1623998083840-18e765458635?auto=format&fit=crop&q=80&w=800",
-                model: "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
-                shortDesc: "典型的直翅目昆虫，后足发达，善于跳跃，是农业害虫的代表。",
-                fullDesc: "不完全变态昆虫。前翅革质，后翅膜质。具有群居型和散居型两种形态，群居时会形成巨大的蝗群进行迁徙。",
-                habit: "植食性，咀嚼式口器，主要取食禾本科植物叶片。"
-            },
-            {
-                id: "ant",
-                name: "弓背蚁",
-                latin: "Camponotus",
-                category: "Hymenoptera",
-                taxonomy: "节肢动物门 → 昆虫纲 → 膜翅目 → 蚁科",
-                image: "https://images.unsplash.com/photo-1585110396069-8256d8257545?auto=format&fit=crop&q=80&w=800",
-                model: "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
-                shortDesc: "高度社会化的昆虫，属于膜翅目，与蜜蜂是近亲。",
-                fullDesc: "完全变态昆虫。具有明显的社会性分工（蚁后、工蚁、兵蚁）。触角呈膝状弯曲，腹部有结节。",
-                habit: "杂食性，通常在地下或朽木中筑巢，通过分泌信息素进行交流。"
-            },
-            {
-                id: "dragonfly",
-                name: "绿蜻蜓",
-                latin: "Anax junius",
-                category: "Odonata",
-                taxonomy: "节肢动物门 → 昆虫纲 → 蜻蜓目 → 差翅亚目",
-                image: "https://images.unsplash.com/photo-1569235485462-cd19541462b1?auto=format&fit=crop&q=80&w=800",
-                model: "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
-                shortDesc: "古老的飞行昆虫，属于不完全变态类，幼虫（水虿）生活在水里。",
-                fullDesc: "拥有两对膜质翅膀，脉络呈网状。复眼巨大，由数万只小眼组成，视力极佳，是空中的顶级捕猎者。",
-                habit: "肉食性，捕食蚊子、苍蝇等小型昆虫，飞行技巧高超，可悬停和急转弯。"
-            },
-            {
-                id: "stinkbug",
-                name: "绿蝽",
-                latin: "Nezara viridula",
-                category: "Hemiptera",
-                taxonomy: "节肢动物门 → 昆虫纲 → 半翅目 → 蝽科",
-                image: "https://images.unsplash.com/photo-1605218427368-35b0f7a3a329?auto=format&fit=crop&q=80&w=800",
-                model: "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
-                shortDesc: "俗称“臭板虫”，具有刺吸式口器，受到惊吓会释放难闻气味。",
-                fullDesc: "不完全变态昆虫。前翅基部革质、端部膜质，称为“半鞘翅”。口器特化为针状，用于刺入植物吸取汁液。",
-                habit: "广泛分布于农田和果园，是常见的农业害虫。"
+                name: "甲虫",
+                latin: "Coleoptera",
+                path: ["动物界", "节肢动物门", "昆虫纲", "鞘翅目", "甲虫科", "甲虫属", "甲虫"],
+                traits: "前翅角质化形成鞘翅，体表坚硬，适应力强。",
+                habitat: "森林、草地、土壤层与腐殖质环境。",
+                ecology: "部分种类参与分解有机质，对生态循环有作用。",
+                image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1200",
+                model: ""
             }
         ];
 
-        let entered = false;
+        const treeData = {
+            name: "动物界",
+            children: [
+                { name: "海绵动物门", children: [] },
+                { name: "刺胞动物门", children: [] },
+                { name: "扁形动物门", children: [] },
+                { name: "线形动物门", children: [] },
+                { name: "环节动物门", children: [] },
+                { name: "软体动物门", children: [] },
+                {
+                    name: "节肢动物门",
+                    children: [
+                        {
+                            name: "昆虫纲",
+                            children: [
+                                {
+                                    name: "鳞翅目",
+                                    children: [
+                                        {
+                                            name: "凤蝶科",
+                                            children: [
+                                                {
+                                                    name: "凤蝶属",
+                                                    children: [
+                                                        { name: "蝴蝶", speciesIndex: 0 }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "膜翅目",
+                                    children: [
+                                        {
+                                            name: "蜜蜂科",
+                                            children: [
+                                                {
+                                                    name: "蜜蜂属",
+                                                    children: [
+                                                        { name: "蜜蜂", speciesIndex: 1 }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "鞘翅目",
+                                    children: [
+                                        {
+                                            name: "甲虫科",
+                                            children: [
+                                                {
+                                                    name: "甲虫属",
+                                                    children: [
+                                                        { name: "甲虫", speciesIndex: 2 }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { name: "棘皮动物门", children: [] },
+                { name: "脊索动物门", children: [] }
+            ]
+        };
+
+        const coverScreen = document.getElementById("cover-screen");
+        const mainApp = document.getElementById("main-app");
+        const detailView = document.getElementById("detail-view");
+        const treeRoot = document.getElementById("treeRoot");
+        const animalModel = document.getElementById("animalModel");
 
         function enterSite() {
-            entered = true;
-            const cover = document.getElementById('cover-screen');
-            cover.style.opacity = '0';
+            coverScreen.style.opacity = "0";
             setTimeout(() => {
-                cover.classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
-                renderGallery('all');
-            }, 800);
+                coverScreen.classList.add("hidden");
+                mainApp.classList.remove("hidden");
+                mainApp.classList.add("fade-in");
+                renderTree();
+            }, 600);
         }
 
-        function showGallery() {
-            document.getElementById('detail-view').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-            renderGallery('all');
-        }
-
-        function showDetailView(id) {
-            const item = specimens.find(s => s.id === id);
-            if (!item) {
-                showGallery();
-                return;
-            }
-            document.getElementById('detail-view').classList.remove('hidden');
-            document.getElementById('main-app').classList.add('hidden');
-            loadDetailView(id);
-        }
-
-        function renderGallery(category) {
-            const container = document.getElementById('gallery-container');
-            if (!container) return;
-            container.innerHTML = '';
-
-            const filteredSpecimens = category === 'all'
-                ? specimens
-                : specimens.filter(s => s.category === category);
-
-            filteredSpecimens.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'card fade-in';
-                card.onclick = () => {
-                    window.location.hash = `detail-${item.id}`;
-                };
-
-                card.innerHTML = `
-                    <div class="card-img">
-                        <img src="${item.image}" alt="${item.name}">
-                    </div>
-                    <div class="card-body">
-                        <h4>${item.name}</h4>
-                        <span class="latin">${item.latin}</span>
-                        <p class="desc">${item.shortDesc}</p>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function filterSelection(category, clickedBtn) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            clickedBtn.classList.add('active');
-            renderGallery(category);
-        }
-
-        function loadDetailView(id) {
-            const item = specimens.find(s => s.id === id);
-            if (!item) return;
-
-            document.getElementById('detail-name').innerText = item.name;
-            document.getElementById('detail-latin').innerText = item.latin;
-            document.getElementById('detail-taxonomy').innerText = item.taxonomy;
-            document.getElementById('detail-desc').innerText = item.fullDesc;
-            document.getElementById('detail-habit').innerText = item.habit;
-            document.getElementById('detail-model').src = item.model;
-        }
-
-        function goBack() {
-            window.location.hash = '';
-            document.getElementById('detail-view').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-            renderGallery('all');
-        }
-
-        function routeByHash() {
-            const hash = window.location.hash.slice(1);
-
-            if (!entered) return;
-
-            if (hash.startsWith('detail-')) {
-                const id = hash.replace('detail-', '');
-                showDetailView(id);
-                return;
-            }
-
-            document.getElementById('detail-view').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-            showGallery();
-        }
-
-        document.getElementById('cover-screen').addEventListener('click', enterSite);
-
-        document.getElementById('cover-screen').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                enterSite();
-            }
+        coverScreen.addEventListener("click", enterSite);
+        coverScreen.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") enterSite();
         });
 
-        window.addEventListener('hashchange', routeByHash);
+        function renderTree() {
+            treeRoot.innerHTML = renderNode(treeData, 0);
+        }
 
-        window.addEventListener('load', () => {
-            if (!window.location.hash) {
-                renderGallery('all');
+        function renderNode(node, depth) {
+            if (!node.children || node.children.length === 0) {
+                if (node.speciesIndex !== undefined) {
+                    const sp = animalData[node.speciesIndex];
+                    return `
+                        <div class="leaf" onclick="openDetail(${node.speciesIndex})">
+                            <i class="fa-solid fa-circle-dot" style="color:var(--accent)"></i>
+                            <div>
+                                <div>${node.name}</div>
+                                <small>${sp.path.join(" > ")}</small>
+                            </div>
+                        </div>
+                    `;
+                }
+                return `
+                    <div class="leaf" style="cursor:default;opacity:0.72;">
+                        <i class="fa-regular fa-circle" style="color:#9db09a"></i>
+                        <div>
+                            <div>${node.name}</div>
+                            <small>暂无下级内容</small>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="tree-item ${depth === 0 ? 'open' : ''}">
+                    <div class="tree-header" onclick="toggleTree(this)">
+                        <div class="tree-title">
+                            <i class="fa-solid fa-folder-tree" style="color:var(--primary)"></i>
+                            <span>${node.name}</span>
+                        </div>
+                        <span class="tree-badge">${node.children.length} 项</span>
+                    </div>
+                    <div class="tree-children">
+                        ${node.children.map(child => renderNode(child, depth + 1)).join("")}
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleTree(headerEl) {
+            const item = headerEl.parentElement;
+            item.classList.toggle("open");
+        }
+
+        function openDetail(index) {
+            const item = animalData[index];
+            mainApp.classList.add("hidden");
+            detailView.classList.remove("hidden");
+
+            document.querySelector("#infoPanel h1").textContent = item.name;
+            document.querySelector("#infoPanel .info-latin").textContent = item.latin;
+            const values = document.querySelectorAll("#infoPanel .info-value");
+            values[0].textContent = item.path.join(" > ");
+            values[1].textContent = item.traits;
+            values[2].textContent = item.habitat;
+            values[3].textContent = item.ecology;
+
+            if (item.model) {
+                animalModel.src = item.model;
+            } else {
+                animalModel.removeAttribute("src");
+            }
+        }
+
+        function closeDetail() {
+            detailView.classList.add("hidden");
+            mainApp.classList.remove("hidden");
+        }
+
+        function randomExplore() {
+            const index = Math.floor(Math.random() * animalData.length);
+            enterSite();
+            setTimeout(() => openDetail(index), 700);
+        }
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && !detailView.classList.contains("hidden")) {
+                closeDetail();
             }
         });
     </script>
