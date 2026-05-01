@@ -59,13 +59,9 @@ function buildPathText(path) {
     return (path || []).map(n => n.title || '').filter(Boolean).join(' → ');
 }
 
-function inferCategory(node) {
-    return node?.phylum || node?.subphylum || node?.className || node?.order || node?.family || node?.genus || '未分类';
-}
-
 let allSpecies = [];
 let entered = false;
-let currentPage = 'home'; // home | family | detail
+let currentPage = 'home';
 let previousPage = 'home';
 let currentFamilySlug = '';
 let lastDetailSlug = '';
@@ -74,17 +70,17 @@ function $(id) {
     return document.getElementById(id);
 }
 
-function showCover() {
-    $('cover-screen')?.classList.remove('hidden');
-    $('main-app')?.classList.add('hidden');
+function showMain() {
+    $('cover-screen')?.classList.add('hidden');
+    $('main-app')?.classList.remove('hidden');
     $('family-view')?.classList.add('hidden');
     $('detail-view')?.classList.add('hidden');
     $('direct-overlay')?.classList.add('hidden');
 }
 
-function showMain() {
-    $('cover-screen')?.classList.add('hidden');
-    $('main-app')?.classList.remove('hidden');
+function showCover() {
+    $('cover-screen')?.classList.remove('hidden');
+    $('main-app')?.classList.add('hidden');
     $('family-view')?.classList.add('hidden');
     $('detail-view')?.classList.add('hidden');
     $('direct-overlay')?.classList.add('hidden');
@@ -117,73 +113,24 @@ function enterSite() {
     }
 }
 
-function showFamily(slug) {
-    const node = findNodeBySlug(slug);
-    if (!node) {
-        showHome();
-        return;
-    }
+function showDirectOverlay(title = '正在进入物种页面', text = '请稍候，正在定位目标物种…') {
+    const overlay = $('direct-overlay');
+    const titleEl = $('directTitle');
+    const textEl = $('directText');
 
-    entered = true;
-    previousPage = currentPage;
-    currentPage = 'family';
-    currentFamilySlug = slug;
+    if (titleEl) titleEl.textContent = title;
+    if (textEl) textEl.textContent = text;
 
-    showMain();
-    $('family-view')?.classList.remove('hidden');
-    $('main-app')?.classList.add('hidden');
-    $('detail-view')?.classList.add('hidden');
-
-    const familyTitle = $('familyTitle');
-    const familyDesc = $('familyDesc');
-    const familyList = $('familyList');
-
-    if (familyTitle) familyTitle.textContent = node.title || '';
-    if (familyDesc) {
-        familyDesc.textContent = node.desc || node.traits || '这里展示该分类单元下的物种列表。';
-    }
-
-    const leaves = collectLeaves([node]);
-    if (familyList) {
-        familyList.innerHTML = '';
-
-        if (!leaves.length) {
-            familyList.innerHTML = `<div class="species-card">该分类下暂无可展示物种。</div>`;
-            return;
-        }
-
-        leaves.forEach(item => {
-            const itemSlug = getNodeSlug(item);
-            const card = document.createElement('div');
-            card.className = 'species-card';
-            card.onclick = () => window.location.hash = `#detail-${itemSlug}`;
-
-            card.innerHTML = `
-                <h4>${item.title || ''}</h4>
-                <span class="latin">${item.latin || ''}</span>
-                <div style="color:var(--soft);line-height:1.7;">${item.desc || item.traits || '暂无说明。'}</div>
-            `;
-            familyList.appendChild(card);
-        });
-    }
-
-    if (location.hash !== `#family-${slug}`) {
-        location.hash = `#family-${slug}`;
+    if (overlay) {
+        overlay.classList.remove('hidden');
     }
 }
 
-function showDetail(slug) {
-    const node = findNodeBySlug(slug);
-    if (!node) {
-        showHome();
-        return;
-    }
+function hideDirectOverlay() {
+    $('direct-overlay')?.classList.add('hidden');
+}
 
-    entered = true;
-    previousPage = currentPage;
-    currentPage = 'detail';
-    lastDetailSlug = slug;
-
+function renderDetail(node, slug) {
     showMain();
     $('detail-view')?.classList.remove('hidden');
     $('family-view')?.classList.add('hidden');
@@ -221,9 +168,80 @@ function showDetail(slug) {
     if (shareLink) {
         shareLink.value = `${location.origin}${location.pathname}#detail-${slug}`;
     }
+}
 
-    if (location.hash !== `#detail-${slug}`) {
-        location.hash = `#detail-${slug}`;
+function showDetail(slug, fromDirectLink = false) {
+    const node = findNodeBySlug(slug);
+    if (!node) {
+        showHome();
+        return;
+    }
+
+    entered = true;
+    previousPage = currentPage;
+    currentPage = 'detail';
+    lastDetailSlug = slug;
+
+    if (fromDirectLink) {
+        showDirectOverlay('正在进入物种页面', '请稍候，正在定位目标物种…');
+        setTimeout(() => {
+            hideDirectOverlay();
+            renderDetail(node, slug);
+        }, 900);
+    } else {
+        renderDetail(node, slug);
+    }
+}
+
+function showFamily(slug) {
+    const node = findNodeBySlug(slug);
+    if (!node) {
+        showHome();
+        return;
+    }
+
+    entered = true;
+    previousPage = currentPage;
+    currentPage = 'family';
+    currentFamilySlug = slug;
+
+    showMain();
+    $('family-view')?.classList.remove('hidden');
+    $('detail-view')?.classList.add('hidden');
+
+    const familyTitle = $('familyTitle');
+    const familyDesc = $('familyDesc');
+    const familyList = $('familyList');
+
+    if (familyTitle) familyTitle.textContent = node.title || '';
+    if (familyDesc) familyDesc.textContent = node.desc || node.traits || '这里展示该分类单元下的物种列表。';
+
+    const leaves = collectLeaves([node]);
+    if (familyList) {
+        familyList.innerHTML = '';
+
+        if (!leaves.length) {
+            familyList.innerHTML = `<div class="species-card">该分类下暂无可展示物种。</div>`;
+            return;
+        }
+
+        leaves.forEach(item => {
+            const itemSlug = getNodeSlug(item);
+            const card = document.createElement('div');
+            card.className = 'species-card';
+            card.onclick = () => window.location.hash = `#detail-${itemSlug}`;
+
+            card.innerHTML = `
+                <h4>${item.title || ''}</h4>
+                <span class="latin">${item.latin || ''}</span>
+                <div style="color:var(--soft);line-height:1.7;">${item.desc || item.traits || '暂无说明。'}</div>
+            `;
+            familyList.appendChild(card);
+        });
+    }
+
+    if (location.hash !== `#family-${slug}`) {
+        location.hash = `#family-${slug}`;
     }
 }
 
@@ -301,14 +319,12 @@ function renderNode(node, keyword = '') {
             wrap.classList.toggle('open');
         }
 
-        // 如果是物种，点击直接进入详情页
         if (isSpecies(node) && !hasChildren) {
             const slug = getNodeSlug(node);
             window.location.hash = `#detail-${slug}`;
             return;
         }
 
-        // 如果是“科”级或其他可进入列表的节点，进入物种列表页
         if (hasChildren && node.badge === '科') {
             const slug = getNodeSlug(node);
             showFamily(slug);
@@ -385,7 +401,7 @@ function routeByHash() {
     }
 
     if (hash.startsWith('detail-')) {
-        showDetail(hash.replace('detail-', ''));
+        showDetail(hash.replace('detail-', ''), true);
         return;
     }
 
@@ -444,5 +460,7 @@ window.renderTree = renderTree;
 window.randomExplore = randomExplore;
 window.copyLink = copyLink;
 window.backToPrevious = backToPrevious;
+window.showDirectOverlay = showDirectOverlay;
+window.hideDirectOverlay = hideDirectOverlay;
 
 window.addEventListener('DOMContentLoaded', init);
