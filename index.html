@@ -1,1173 +1,863 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>自然之眼 | 线上生物博物馆</title>
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
-  <style>
-    :root{
-      --bg:#f4f7f1;
-      --bg2:#e8efe2;
-      --surface:rgba(255,255,255,0.74);
-      --surface-strong:rgba(255,255,255,0.88);
-      --primary:#497a45;
-      --primary-dark:#355d33;
-      --accent:#d39c33;
-      --text:#20311d;
-      --soft:#64715f;
-      --shadow:0 18px 46px rgba(37,64,31,0.12);
-      --shadow-soft:0 10px 30px rgba(37,64,31,0.08);
-      --line:rgba(73,122,69,0.12);
-      --radius:22px;
-    }
-
-    *{box-sizing:border-box}
-    html,body{
-      margin:0;
-      width:100%;
-      height:100%;
-      overflow:hidden;
-      font-family:"Helvetica Neue",Helvetica,Arial,"PingFang SC","Microsoft YaHei",sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(211,156,51,0.12), transparent 35%),
-        radial-gradient(circle at right center, rgba(73,122,69,0.14), transparent 32%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
-    }
-
-    .hidden{display:none !important;}
-
-    .page{
-      position:fixed;
-      inset:0;
-      display:flex;
-      flex-direction:column;
-      overflow:hidden;
-    }
-
-    .topbar{
-      flex:0 0 auto;
-      position:sticky;
-      top:0;
-      z-index:20;
-      padding:14px 20px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      backdrop-filter:blur(16px);
-      background:rgba(244,247,241,0.72);
-      border-bottom:1px solid rgba(73,122,69,0.08);
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      min-width:220px;
-    }
-
-    .brand-mark{
-      width:46px;
-      height:46px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      color:#fff;
-      background:linear-gradient(135deg, var(--primary), #5e8c56);
-      box-shadow:0 10px 24px rgba(73,122,69,0.25);
-      flex:0 0 auto;
-    }
-
-    .brand-text h1{
-      margin:0;
-      font-size:20px;
-      line-height:1.1;
-      color:var(--primary-dark);
-    }
-
-    .brand-text span{
-      display:block;
-      margin-top:4px;
-      font-size:12px;
-      color:var(--soft);
-    }
-
-    .top-nav,.top-actions{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .nav-chip,.btn-mini,.ghost-btn,.primary-btn,.secondary-btn,.tree-chip,.tag-btn{
-      border:none;
-      outline:none;
-      cursor:pointer;
-      transition:all .25s ease;
-      font-family:inherit;
-    }
-
-    .nav-chip,.tree-chip,.tag-btn,.ghost-btn,.secondary-btn{
-      background:rgba(255,255,255,0.82);
-      color:var(--primary-dark);
-      border:1px solid rgba(73,122,69,0.14);
-    }
-
-    .nav-chip,.tree-chip{
-      padding:11px 15px;
-      border-radius:14px;
-      font-size:14px;
-      font-weight:700;
-    }
-
-    .btn-mini,.primary-btn{
-      padding:12px 16px;
-      border-radius:14px;
-      font-size:14px;
-      font-weight:700;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      background:linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color:#fff;
-      box-shadow:0 12px 26px rgba(73,122,69,0.22);
-    }
-
-    .ghost-btn,.secondary-btn{
-      padding:14px 20px;
-      border-radius:16px;
-      font-size:16px;
-      font-weight:700;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-    }
-
-    .btn-mini:hover,.primary-btn:hover,.ghost-btn:hover,.secondary-btn:hover,.nav-chip:hover,.tree-chip:hover,.tag-btn:hover{
-      transform:translateY(-2px);
-      background:rgba(255,255,255,0.96);
-    }
-
-    .search-input{
-      width:min(320px, 100%);
-      padding:12px 16px;
-      border-radius:14px;
-      border:1px solid rgba(73,122,69,0.16);
-      background:rgba(255,255,255,0.9);
-      outline:none;
-      font-size:14px;
-      box-shadow:var(--shadow-soft);
-    }
-
-    .search-input:focus{
-      border-color:rgba(73,122,69,0.35);
-      box-shadow:0 0 0 4px rgba(73,122,69,0.08);
-    }
-
-    /* ===== 首页 ===== */
-    #home-page{
-      flex:1;
-      min-height:0;
-      overflow:auto;
-      padding:18px;
-    }
-
-    .home-shell{
-      max-width:1280px;
-      margin:0 auto;
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
-
-    .hero-card,.section-block,.mini-card{
-      background:var(--surface);
-      border:1px solid rgba(255,255,255,0.7);
-      backdrop-filter:blur(16px);
-      box-shadow:var(--shadow-soft);
-    }
-
-    .hero-card{
-      border-radius:30px;
-      padding:30px;
-      background:
-        radial-gradient(circle at top right, rgba(211,156,51,0.12), transparent 28%),
-        linear-gradient(180deg, rgba(255,255,255,0.84), rgba(255,255,255,0.72));
-    }
-
-    .hero-top{
-      display:grid;
-      grid-template-columns:1.5fr .9fr;
-      gap:18px;
-    }
-
-    .hero-main{
-      padding:28px;
-      border-radius:26px;
-      background:linear-gradient(135deg, rgba(73,122,69,0.08), rgba(255,255,255,0.82));
-      border:1px solid rgba(73,122,69,0.12);
-    }
-
-    .hero-kicker{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      color:var(--primary-dark);
-      font-weight:700;
-      font-size:14px;
-      margin-bottom:14px;
-    }
-
-    .hero-main h2{
-      margin:0;
-      font-size:clamp(28px, 4vw, 48px);
-      line-height:1.15;
-      color:var(--primary-dark);
-    }
-
-    .hero-main p{
-      margin:18px 0 0;
-      line-height:1.9;
-      color:var(--soft);
-      font-size:15px;
-    }
-
-    .hero-actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:22px;
-    }
-
-    .side-stats{
-      display:grid;
-      gap:12px;
-    }
-
-    .stat-card{
-      background:rgba(255,255,255,0.74);
-      border:1px solid var(--line);
-      border-radius:20px;
-      padding:18px;
-      display:flex;
-      align-items:center;
-      gap:14px;
-    }
-
-    .stat-ico{
-      width:46px;
-      height:46px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      color:#fff;
-      background:linear-gradient(135deg, var(--primary), #6f9a5f);
-      flex:0 0 auto;
-    }
-
-    .stat-card strong{
-      display:block;
-      font-size:20px;
-      color:var(--primary-dark);
-    }
-
-    .stat-card span{
-      display:block;
-      margin-top:4px;
-      color:var(--soft);
-      font-size:13px;
-    }
-
-    .section-block{
-      border-radius:28px;
-      padding:22px;
-    }
-
-    .section-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-end;
-      gap:12px;
-      margin-bottom:18px;
-    }
-
-    .section-head h3{
-      margin:0;
-      color:var(--primary-dark);
-    }
-
-    .section-head p{
-      margin:6px 0 0;
-      color:var(--soft);
-      font-size:13px;
-    }
-
-    .section-tag{
-      padding:9px 14px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:700;
-      color:var(--primary-dark);
-      background:rgba(73,122,69,0.1);
-    }
-
-    .guide-grid,.feature-grid{
-      display:grid;
-      gap:14px;
-    }
-
-    .guide-grid{
-      grid-template-columns:repeat(4,1fr);
-    }
-
-    .feature-grid{
-      grid-template-columns:repeat(4,1fr);
-    }
-
-    .mini-card{
-      border-radius:20px;
-      padding:18px;
-      cursor:pointer;
-      transition:all .25s ease;
-    }
-
-    .mini-card:hover{
-      transform:translateY(-4px);
-    }
-
-    .mini-card i{
-      font-size:28px;
-      color:var(--primary);
-    }
-
-    .mini-card h4{
-      margin:12px 0 8px;
-      color:var(--primary-dark);
-    }
-
-    .mini-card p{
-      margin:0;
-      color:var(--soft);
-      line-height:1.7;
-      font-size:14px;
-    }
-
-    /* ===== 分类树页 ===== */
-    #tree-page{
-      flex:1;
-      min-height:0;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-    }
-
-    .tree-shell{
-      flex:1;
-      min-height:0;
-      display:grid;
-      grid-template-columns:380px 1fr;
-      gap:18px;
-      padding:18px;
-      overflow:hidden;
-    }
-
-    .tree-panel,.tree-detail-panel{
-      background:var(--surface);
-      border:1px solid rgba(255,255,255,0.7);
-      backdrop-filter:blur(16px);
-      box-shadow:var(--shadow-soft);
-      border-radius:28px;
-      overflow:auto;
-    }
-
-    .tree-panel{
-      padding:18px;
-    }
-
-    .tree-detail-panel{
-      padding:22px;
-    }
-
-    .panel-head{
-      padding-bottom:14px;
-      border-bottom:1px solid var(--line);
-      margin-bottom:14px;
-    }
-
-    .panel-head h2{
-      margin:0;
-      color:var(--primary-dark);
-    }
-
-    .panel-head p{
-      margin:6px 0 0;
-      color:var(--soft);
-      font-size:13px;
-    }
-
-    .tree-toolbar{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
-    }
-
-    .tree-root{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .node-card{
-      border-radius:18px;
-      padding:12px;
-      border:1px solid transparent;
-      background:rgba(255,255,255,0.72);
-      transition:all .22s ease;
-      cursor:pointer;
-    }
-
-    .node-card:hover{
-      border-color:rgba(73,122,69,0.16);
-      transform:translateX(4px);
-      background:rgba(255,255,255,0.94);
-    }
-
-    .node-row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-
-    .node-left{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-    }
-
-    .toggle-btn{
-      width:28px;
-      height:28px;
-      border-radius:10px;
-      border:1px solid rgba(73,122,69,0.14);
-      background:rgba(255,255,255,0.88);
-      color:var(--primary-dark);
-      cursor:pointer;
-      flex:0 0 auto;
-    }
-
-    .node-title{
-      font-weight:700;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .node-badge{
-      font-size:12px;
-      color:var(--soft);
-      flex:0 0 auto;
-    }
-
-    .node-children{
-      margin-left:30px;
-      margin-top:10px;
-      padding-left:14px;
-      border-left:1px dashed rgba(73,122,69,0.2);
-      display:none;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .node-card.open > .node-children{
-      display:flex;
-    }
-
-    .detail-view{
-      display:grid;
-      grid-template-columns:340px 1fr;
-      gap:16px;
-      align-items:start;
-    }
-
-    .media-box{
-      min-height:280px;
-      border-radius:22px;
-      background:linear-gradient(180deg, rgba(73,122,69,0.09), rgba(255,255,255,0.88));
-      border:1px solid rgba(73,122,69,0.12);
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-    }
-
-    .info-box h2{
-      margin:0;
-      font-size:30px;
-      color:var(--primary-dark);
-    }
-
-    .latin-name{
-      margin:8px 0 14px;
-      color:var(--accent);
-      font-style:italic;
-    }
-
-    .info-tags{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin:14px 0 18px;
-    }
-
-    .tag-btn{
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:700;
-      background:rgba(73,122,69,0.08);
-      color:var(--primary-dark);
-      border:1px solid rgba(73,122,69,0.1);
-    }
-
-    .info-box p{
-      line-height:1.9;
-      color:var(--soft);
-      margin:0 0 12px;
-    }
-
-    .breadcrumb{
-      color:var(--soft);
-      font-size:13px;
-      margin-bottom:14px;
-    }
-
-    .footer{
-      padding:14px 20px 18px;
-      color:var(--soft);
-      font-size:12px;
-      text-align:center;
-    }
-
-    @media (max-width:1100px){
-      .hero-top,.detail-view,.tree-shell{grid-template-columns:1fr}
-      .guide-grid,.feature-grid{grid-template-columns:repeat(2,1fr)}
-      .tree-panel{max-height:320px}
-    }
-
-    @media (max-width:640px){
-      html,body{overflow:auto}
-      .topbar{padding:12px 14px; flex-direction:column; align-items:stretch}
-      .brand{min-width:auto}
-      .top-actions{width:100%; justify-content:stretch}
-      .search-input{width:100%}
-      .guide-grid,.feature-grid{grid-template-columns:1fr}
-      .hero-actions{flex-direction:column}
-      .hero-actions button,.cover-actions button{width:100%; justify-content:center}
-      .tree-shell{padding:12px; gap:12px}
-      .section-block,.hero-card,.tree-panel,.tree-detail-panel{border-radius:22px}
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>自然之眼 | 动物分类数字博物馆</title>
+
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #f4f7f1;
+            --bg2: #e8efe2;
+            --primary: #497a45;
+            --primary-dark: #355d33;
+            --accent: #d39c33;
+            --text: #20311d;
+            --soft: #64715f;
+            --line: rgba(69, 104, 62, 0.10);
+            --line-strong: rgba(69, 104, 62, 0.16);
+            --shadow: 0 18px 46px rgba(37, 64, 31, 0.12);
+            --shadow-strong: 0 24px 60px rgba(37, 64, 31, 0.16);
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-md: 18px;
+            --radius-sm: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top, rgba(255,255,255,0.80), rgba(232,239,226,0.95)),
+                linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+            overflow: hidden;
+        }
+
+        body {
+            position: relative;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.7s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ========== 封面页 ========== */
+        #cover-screen {
+            position: absolute;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background:
+                linear-gradient(rgba(255,255,255,0.18), rgba(245,248,242,0.20)),
+                url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&q=80&w=1920')
+                center/cover no-repeat;
+            cursor: pointer;
+            transition: opacity 0.8s ease;
+        }
+
+        #cover-screen::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.16);
+            backdrop-filter: blur(1px);
+        }
+
+        .cover-inner {
+            position: relative;
+            z-index: 2;
+            width: min(640px, calc(100% - 40px));
+            padding: 34px 28px;
+            border-radius: 28px;
+            background: rgba(255,255,255,0.26);
+            border: 1px solid rgba(69,104,62,0.10);
+            backdrop-filter: blur(8px);
+            box-shadow: var(--shadow);
+        }
+
+        #cover-screen h1 {
+            margin: 0;
+            font-size: clamp(2.6rem, 6vw, 4.2rem);
+            font-weight: 300;
+            letter-spacing: 0.28em;
+            color: #1f2f1c;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+        }
+
+        #cover-screen p {
+            margin: 18px auto 0;
+            max-width: 460px;
+            font-size: 1.05rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: rgba(32,49,29,0.74);
+            border-bottom: 1px solid rgba(69,104,62,0.16);
+            padding-bottom: 12px;
+        }
+
+        .cover-hint {
+            margin-top: 18px;
+            font-size: 0.9rem;
+            color: rgba(32,49,29,0.60);
+            letter-spacing: 0.18em;
+        }
+
+        /* ========== 主应用 ========== */
+        #main-app {
+            position: absolute;
+            inset: 0;
+            z-index: 90;
+            overflow-y: auto;
+            background:
+                radial-gradient(circle at top, rgba(255,255,255,0.80), rgba(232,239,226,0.95)),
+                linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 60;
+            background: rgba(255,255,255,0.68);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(69,104,62,0.10);
+        }
+
+        .nav-inner {
+            width: min(1280px, calc(100% - 32px));
+            margin: 0 auto;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), #7eb06a);
+            color: white;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 12px 24px rgba(73,122,69,0.18);
+        }
+
+        .brand-text h1 {
+            margin: 0;
+            font-size: 1.05rem;
+            color: var(--primary-dark);
+        }
+
+        .brand-text span {
+            display: block;
+            margin-top: 2px;
+            font-size: 0.82rem;
+            color: var(--soft);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--primary-dark);
+            font-size: 0.92rem;
+            padding: 9px 14px;
+            border-radius: 999px;
+            transition: all 0.25s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(73,122,69,0.10);
+        }
+
+        .nav-cta {
+            border: 1px solid rgba(73,122,69,0.14);
+            background: rgba(255,255,255,0.84);
+            color: var(--primary-dark);
+            padding: 10px 16px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .nav-cta:hover {
+            background: rgba(73,122,69,0.08);
+            border-color: rgba(73,122,69,0.22);
+        }
+
+        .shell {
+            width: min(1280px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 34px 0 64px;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 500px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            background:
+                linear-gradient(115deg, rgba(245,248,242,0.84), rgba(233,241,226,0.56)),
+                url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=1920')
+                center/cover no-repeat;
+            box-shadow: var(--shadow-strong);
+            border: 1px solid var(--line);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at right top, rgba(211,156,51,0.10), transparent 32%),
+                radial-gradient(circle at left bottom, rgba(73,122,69,0.08), transparent 34%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 28px;
+            align-items: center;
+            min-height: 500px;
+            padding: 42px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.62);
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+            border: 1px solid rgba(69,104,62,0.08);
+        }
+
+        .hero h2 {
+            margin: 16px 0 0;
+            font-size: clamp(2.6rem, 5vw, 5rem);
+            line-height: 1.04;
+            color: #20311d;
+        }
+
+        .hero p {
+            margin: 18px 0 0;
+            max-width: 560px;
+            color: var(--soft);
+            font-size: 1.04rem;
+            line-height: 1.9;
+        }
+
+        .hero-actions {
+            margin-top: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 14px 22px;
+            font-size: 0.98rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.25s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #77a963);
+            color: white;
+            box-shadow: 0 12px 24px rgba(73,122,69,0.18);
+        }
+
+        .btn-light {
+            background: rgba(255,255,255,0.72);
+            color: var(--primary-dark);
+            border: 1px solid rgba(69,104,62,0.12);
+        }
+
+        .section {
+            margin-top: 26px;
+        }
+
+        .section-card {
+            background: rgba(255,255,255,0.74);
+            border: 1px solid rgba(69,104,62,0.10);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            padding: 24px;
+        }
+
+        .section-head h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+        }
+
+        .section-head p {
+            margin: 6px 0 0;
+            color: var(--soft);
+            font-size: 0.92rem;
+        }
+
+        .search-box {
+            width: 100%;
+            margin-bottom: 16px;
+            border: 1px solid rgba(69,104,62,0.14);
+            background: rgba(255,255,255,0.9);
+            padding: 12px 14px;
+            border-radius: 14px;
+            outline: none;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .quick-item {
+            padding: 18px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.60);
+            border: 1px solid rgba(69,104,62,0.10);
+        }
+
+        .quick-item h4 {
+            margin: 10px 0 6px;
+            color: var(--primary-dark);
+        }
+
+        .tree-wrap {
+            display: grid;
+            gap: 12px;
+        }
+
+        .tree-item {
+            border: 1px solid rgba(69,104,62,0.12);
+            border-radius: 18px;
+            background: rgba(255,255,255,0.78);
+            overflow: hidden;
+        }
+
+        .tree-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            cursor: pointer;
+        }
+
+        .tree-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .tree-badge {
+            font-size: 0.8rem;
+            color: var(--soft);
+            background: rgba(73,122,69,0.08);
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+
+        .tree-children {
+            display: none;
+            padding: 0 0 12px 22px;
+            border-left: 1px dashed rgba(69,104,62,0.18);
+            margin-left: 18px;
+        }
+
+        .tree-item.open > .tree-children {
+            display: block;
+        }
+
+        .tree-leaf {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            margin: 8px 0;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.80);
+            border: 1px solid rgba(69,104,62,0.10);
+            cursor: pointer;
+        }
+
+        .tree-leaf:hover {
+            background: rgba(73,122,69,0.07);
+        }
+
+        .species-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .species-card {
+            padding: 16px;
+            border: 1px solid rgba(69,104,62,0.12);
+            border-radius: 18px;
+            background: rgba(255,255,255,0.8);
+            cursor: pointer;
+        }
+
+        .species-card h4 {
+            margin: 0 0 6px;
+            color: var(--primary-dark);
+        }
+
+        .species-card .latin {
+            display: block;
+            color: var(--soft);
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+
+        #family-view, #detail-view {
+            position: absolute;
+            inset: 0;
+            z-index: 95;
+            display: flex;
+            flex-direction: column;
+            background: #f3f7ef;
+        }
+
+        .family-header, .detail-header {
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.78);
+            border-bottom: 1px solid rgba(69,104,62,0.10);
+        }
+
+        .back-btn {
+            border: 1px solid rgba(69,104,62,0.14);
+            background: white;
+            color: var(--primary-dark);
+            padding: 10px 16px;
+            border-radius: 999px;
+            cursor: pointer;
+        }
+
+        .family-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .family-hero {
+            background: rgba(255,255,255,0.8);
+            border: 1px solid rgba(69,104,62,0.12);
+            border-radius: 24px;
+            padding: 22px;
+            margin-bottom: 18px;
+        }
+
+        .family-hero h2 {
+            margin: 0 0 8px;
+            color: var(--primary-dark);
+        }
+
+        .family-hero p {
+            margin: 0;
+            color: var(--soft);
+            line-height: 1.8;
+        }
+
+        .detail-content {
+            flex: 1;
+            display: flex;
+            min-height: 0;
+        }
+
+        .model-container {
+            flex: 1;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.42), rgba(228,236,220,0.95));
+            position: relative;
+        }
+
+        .loading-tip {
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            z-index: 2;
+            background: rgba(255,255,255,0.75);
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.88rem;
+            color: var(--primary-dark);
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 100%;
+        }
+
+        .info-panel {
+            width: 420px;
+            padding: 32px;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.76);
+            border-left: 1px solid rgba(69,104,62,0.10);
+        }
+
+        .info-panel h1 {
+            margin: 0 0 8px;
+            font-size: 2.1rem;
+            color: var(--primary-dark);
+        }
+
+        .info-latin {
+            display: block;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(69,104,62,0.10);
+            color: #7b8976;
+            font-style: italic;
+        }
+
+        .info-row {
+            margin-bottom: 20px;
+        }
+
+        .info-label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--accent);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            margin: 0;
+            line-height: 1.8;
+            color: #32402d;
+        }
+
+        .share-box {
+            margin-top: 18px;
+            padding: 14px;
+            border-radius: 16px;
+            background: rgba(73,122,69,0.06);
+            border: 1px dashed rgba(73,122,69,0.18);
+        }
+
+        .share-box input {
+            width: 100%;
+            margin-top: 8px;
+            border: 1px solid rgba(69,104,62,0.14);
+            background: white;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        /* ========== 直达过渡层 ========== */
+        #direct-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, rgba(244,247,241,0.92), rgba(232,239,226,0.95));
+            backdrop-filter: blur(8px);
+        }
+
+        .direct-box {
+            width: min(420px, calc(100% - 40px));
+            padding: 34px 28px;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.88);
+            border: 1px solid rgba(69,104,62,0.12);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .spinner {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            border: 4px solid rgba(73,122,69,0.14);
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+
+        .direct-box h2 {
+            margin: 0 0 8px;
+            font-size: 1.4rem;
+            color: var(--primary-dark);
+        }
+
+        .direct-box p {
+            margin: 0;
+            color: var(--soft);
+            line-height: 1.8;
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width:980px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .detail-content {
+                flex-direction: column;
+            }
+
+            .model-container {
+                height: 46vh;
+            }
+
+            .info-panel {
+                width: 100%;
+                height: 54vh;
+            }
+        }
+
+        @media (max-width:640px) {
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .shell {
+                width: min(100% - 20px, 1280px);
+            }
+
+            .info-panel {
+                padding: 22px;
+            }
+
+            .hero-content {
+                padding: 24px;
+            }
+
+            .section-card {
+                padding: 18px;
+            }
+
+            .nav-inner {
+                width: min(100% - 20px, 1280px);
+                height: auto;
+                padding: 12px 0;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<!-- 首页 -->
-<div id="home-page" class="page">
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark"><i class="fa-solid fa-paw"></i></div>
-      <div class="brand-text">
+<div id="cover-screen" role="button" tabindex="0" aria-label="进入自然之眼">
+    <div class="cover-inner">
         <h1>自然之眼</h1>
-        <span>线上生物博物馆</span>
-      </div>
+        <p>探索生命分类的奥秘。<br>点击进入 / Press Enter</p>
+        <div class="cover-hint">ENTER</div>
     </div>
-
-    <div class="top-nav">
-      <button class="nav-chip" onclick="showTreePage()"><i class="fa-solid fa-sitemap"></i> 分类树</button>
-      <button class="nav-chip" onclick="randomExplore()"><i class="fa-solid fa-shuffle"></i> 随机探索</button>
-    </div>
-
-    <div class="top-actions">
-      <input id="homeSearch" class="search-input" type="text" placeholder="搜索物种 / 类群..." oninput="searchInHome()">
-      <button class="btn-mini" onclick="showTreePage()"><i class="fa-solid fa-leaf"></i> 进入分类树</button>
-    </div>
-  </header>
-
-  <main id="home-page-content" style="flex:1; min-height:0; overflow:auto; padding:18px;">
-    <div class="home-shell">
-      <div class="hero-card">
-        <div class="hero-top">
-          <div class="hero-main">
-            <div class="hero-kicker"><i class="fa-solid fa-seedling"></i> 线上生物博物馆 · 分类体系导览</div>
-            <h2>沿着生命之树，<br>探索动物分类体系</h2>
-            <p>
-              本页面展示 9 大动物门类的代表性分类路径。你可以进入独立分类树页逐层展开，
-              也可以随机探索某个标志性物种，浏览其分类与特征。
-            </p>
-            <div class="hero-actions">
-              <button class="primary-btn" onclick="showTreePage()"><i class="fa-solid fa-sitemap"></i> 进入分类树</button>
-              <button class="secondary-btn" onclick="randomExplore()"><i class="fa-solid fa-shuffle"></i> 随机漫游</button>
-            </div>
-          </div>
-
-          <div class="side-stats">
-            <div class="stat-card">
-              <div class="stat-ico"><i class="fa-solid fa-diagram-project"></i></div>
-              <div><strong>7级</strong><span>界-种分类结构</span></div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-ico"><i class="fa-solid fa-bug"></i></div>
-              <div><strong>9门</strong><span>核心动物类群</span></div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-ico"><i class="fa-solid fa-tree"></i></div>
-              <div><strong>多级</strong><span>典型分类路径</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-block">
-        <div class="section-head">
-          <div>
-            <h3>精选导览</h3>
-            <p>点击进入对应门类的分类页面</p>
-          </div>
-          <div class="section-tag">Guide</div>
-        </div>
-
-        <div class="guide-grid">
-          <div class="mini-card" onclick="openTreeAndFocus('海绵动物门')">
-            <i class="fa-solid fa-water"></i>
-            <h4>海绵动物门</h4>
-            <p>最原始多细胞动物，无真正组织分化。</p>
-          </div>
-          <div class="mini-card" onclick="openTreeAndFocus('刺胞动物门')">
-            <i class="fa-solid fa-jellyfish"></i>
-            <h4>刺胞动物门</h4>
-            <p>具有刺细胞，珊瑚、海葵、水母属于此门。</p>
-          </div>
-          <div class="mini-card" onclick="openTreeAndFocus('节肢动物门')">
-            <i class="fa-solid fa-bug"></i>
-            <h4>节肢动物门</h4>
-            <p>外骨骼、分节附肢，是动物界最大门类之一。</p>
-          </div>
-          <div class="mini-card" onclick="openTreeAndFocus('脊索动物门')">
-            <i class="fa-solid fa-fish"></i>
-            <h4>脊索动物门</h4>
-            <p>脊椎动物亚门占绝对优势，人类也在此门。</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-block">
-        <div class="section-head">
-          <div>
-            <h3>精选功能</h3>
-            <p>浏览、检索、展示一体化</p>
-          </div>
-          <div class="section-tag">Features</div>
-        </div>
-
-        <div class="feature-grid">
-          <div class="mini-card"><i class="fa-solid fa-sitemap"></i><h4>分类树浏览</h4><p>按门、纲、目、科、属、种逐层展开。</p></div>
-          <div class="mini-card"><i class="fa-solid fa-magnifying-glass"></i><h4>智能搜索</h4><p>输入物种名或类群关键词快速定位。</p></div>
-          <div class="mini-card"><i class="fa-solid fa-image"></i><h4>档案展示</h4><p>为每个节点展示分类信息与物种特征。</p></div>
-          <div class="mini-card"><i class="fa-solid fa-earth-asia"></i><h4>博物馆叙事</h4><p>像浏览展陈一样探索动物分类体系。</p></div>
-        </div>
-      </div>
-    </div>
-  </main>
 </div>
 
-<!-- 分类树页 -->
-<div id="tree-page" class="page hidden">
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark"><i class="fa-solid fa-sitemap"></i></div>
-      <div class="brand-text">
-        <h1>分类树</h1>
-        <span>动物界 → 门 → 纲 → 目 → 科 → 属 → 种</span>
-      </div>
+<div id="main-app" class="hidden">
+    <header class="navbar">
+        <div class="nav-inner">
+            <div class="brand">
+                <div class="brand-mark"><i class="fa-solid fa-paw"></i></div>
+                <div class="brand-text">
+                    <h1>自然之眼</h1>
+                    <span>动物分类数字博物馆</span>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#home">首页</a>
+                <a href="#archive">档案</a>
+                <a href="#about">关于</a>
+                <button class="nav-cta" onclick="document.getElementById('archive').scrollIntoView({behavior:'smooth'})">开始探索</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="shell">
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <div>
+                    <div class="eyebrow"><i class="fa-solid fa-leaf"></i> 生命分类 · 数字档案</div>
+                    <h2>从动物界到科级目录，逐级认识生命的秩序</h2>
+                    <p>如果 URL 中带有 species 参数，页面会自动跳过封面并显示直达过渡动画。</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary" onclick="document.getElementById('archive').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-sitemap"></i> 进入档案</button>
+                        <button class="btn btn-light" onclick="randomExplore()"><i class="fa-solid fa-shuffle"></i> 随机探索</button>
+                    </div>
+                </div>
+                <div>
+                    <div style="padding:20px;border-radius:20px;background:rgba(255,255,255,0.65);border:1px solid rgba(69,104,62,0.12);">
+                        <h3 style="margin:0 0 8px;color:var(--primary-dark);">当前目录层级</h3>
+                        <p style="margin:0;color:var(--soft);line-height:1.8;">动物界 → 各门类 → 节肢动物门 → 昆虫纲 → 鳞翅目 → 科</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-card">
+                <div class="section-head">
+                    <h3>快速导览</h3>
+                    <p>完整门类可展开；鳞翅目下仅展示到“科”</p>
+                </div>
+                <div class="quick-grid">
+                    <div class="quick-item"><h4>完整门类</h4><p>海绵、刺胞、扁形等门类保留。</p></div>
+                    <div class="quick-item"><h4>科视图</h4><p>点击科后进入该科物种视图。</p></div>
+                    <div class="quick-item"><h4>独立链接</h4><p>每个物种都有专属网址。</p></div>
+                    <div class="quick-item"><h4>物种详情</h4><p>查看特征、环境、生态作用。</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="archive">
+            <div class="section-card">
+                <div class="section-head">
+                    <h3>动物分类档案</h3>
+                    <p>各门类可展开；鳞翅目分支只展示到科</p>
+                </div>
+                <input id="searchInput" class="search-box" type="text" placeholder="搜索：凤蝶科 / 蛱蝶科 / 粉蝶..." oninput="renderTree()">
+                <div class="tree-wrap" id="treeRoot"></div>
+            </div>
+        </section>
     </div>
-
-    <div class="top-nav">
-      <button class="nav-chip" onclick="showHomePage()"><i class="fa-solid fa-house"></i> 返回首页</button>
-      <button class="nav-chip" onclick="expandAll()"><i class="fa-solid fa-plus"></i> 展开全部</button>
-      <button class="nav-chip" onclick="collapseAll()"><i class="fa-solid fa-minus"></i> 收起全部</button>
-    </div>
-
-    <div class="top-actions">
-      <input id="treeSearch" class="search-input" type="text" placeholder="搜索物种 / 类群..." oninput="renderTreePage()">
-      <button class="btn-mini" onclick="randomExplore()"><i class="fa-solid fa-shuffle"></i> 随机探索</button>
-    </div>
-  </header>
-
-  <main class="tree-shell">
-    <aside class="tree-panel">
-      <div class="panel-head">
-        <h2>分类树</h2>
-        <p>点击节点展开或查看代表物种</p>
-      </div>
-      <div class="tree-toolbar">
-        <button class="tree-chip" onclick="focusLevel('门', this)">门</button>
-        <button class="tree-chip" onclick="focusLevel('纲', this)">纲</button>
-        <button class="tree-chip" onclick="focusLevel('目', this)">目</button>
-        <button class="tree-chip" onclick="focusLevel('科', this)">科</button>
-        <button class="tree-chip" onclick="focusLevel('属', this)">属</button>
-        <button class="tree-chip" onclick="focusLevel('种', this)">种</button>
-      </div>
-      <div id="treeRoot" class="tree-root"></div>
-    </aside>
-
-    <section class="tree-detail-panel">
-      <div id="treeDetailContent">
-        <h2 style="margin-top:0;color:var(--primary-dark)">请选择一个分类节点</h2>
-        <p style="color:var(--soft);line-height:1.9">
-          这里将显示所选门类、纲、目、科、属或种的详细说明。
-        </p>
-      </div>
-    </section>
-  </main>
 </div>
 
-<div class="footer">自然之眼 · 线上生物博物馆｜动物分类体系导览</div>
+<div id="direct-overlay" class="hidden">
+    <div class="direct-box">
+        <div class="spinner"></div>
+        <h2 id="directTitle">正在进入物种页面</h2>
+        <p id="directText">请稍候，正在定位目标物种…</p>
+    </div>
+</div>
 
-<script>
-const taxonomy = [
-  {
-    title:"海绵动物门", badge:"门", phylum:"海绵动物门", latin:"Porifera",
-    desc:"最原始多细胞动物，无真正组织分化，具水沟系和骨针支撑。",
-    children:[
-      { title:"钙质海绵纲", badge:"纲", className:"钙质海绵纲", latin:"Calcarea", desc:"骨针成分为碳酸钙，体型较小。",
-        children:[
-          { title:"钙质海绵目", badge:"目", order:"钙质海绵目", latin:"Calcinea",
-            children:[
-              { title:"白枝海绵科", badge:"科", family:"白枝海绵科", latin:"Leucascidae",
-                children:[
-                  { title:"白枝海绵属", badge:"属", genus:"白枝海绵属", latin:"Leucascus",
-                    children:[
-                      { title:"白枝海绵", badge:"种", species:true, latin:"Leucascus simplex", traits:"全球广布的浅海小型海绵。"}
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      { title:"浴海绵", badge:"种", species:true, latin:"Spongia officinalis", traits:"寻常海绵纲，骨针为角质纤维，人类最早利用的天然海绵。"},
-      { title:"偕老同穴", badge:"种", species:true, latin:"Euplectella aspergillum", traits:"六放海绵纲，玻璃质骨针构成精美笼状结构。"}
-    ]
-  },
-  {
-    title:"刺胞动物门", badge:"门", phylum:"刺胞动物门", latin:"Cnidaria",
-    desc:"辐射对称，具刺细胞，有口无肛门，分水螅型与水母型。",
-    children:[
-      { title:"珊瑚纲", badge:"纲", className:"珊瑚纲", latin:"Anthozoa", desc:"仅水螅型，无水母型，多数分泌石灰质骨骼。",
-        children:[
-          { title:"石珊瑚目", badge:"目", order:"石珊瑚目", latin:"Scleractinia",
-            children:[
-              { title:"鹿角珊瑚科", badge:"科", family:"鹿角珊瑚科", latin:"Acroporidae",
-                children:[
-                  { title:"鹿角珊瑚属", badge:"属", genus:"鹿角珊瑚属", latin:"Acropora",
-                    children:[
-                      { title:"鹿角珊瑚", badge:"种", species:true, latin:"Acropora cervicornis", traits:"珊瑚礁主要建造者，全球热带海域关键生态种。"}
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          { title:"海葵", badge:"种", species:true, latin:"Anthopleura xanthogrammica", traits:"固着生活无骨骼，触手含剧毒刺细胞。"}
-        ]
-      },
-      { title:"海月水母", badge:"种", species:true, latin:"Aurelia aurita", traits:"钵水母纲，最常见水母，伞状透明体。"}
-    ]
-  },
-  {
-    title:"扁形动物门", badge:"门", phylum:"扁形动物门", latin:"Platyhelminthes",
-    desc:"两侧对称、三胚层、无体腔，背腹扁平，多数寄生。",
-    children:[
-      { title:"涡虫纲", badge:"纲", className:"涡虫纲", latin:"Turbellaria", desc:"自由生活，体表具纤毛，再生能力强。",
-        children:[
-          { title:"三肠目", badge:"目", order:"三肠目", latin:"Tricladida",
-            children:[
-              { title:"三角涡虫科", badge:"科", family:"三角涡虫科", latin:"Dugesiidae",
-                children:[
-                  { title:"三角涡虫属", badge:"属", genus:"三角涡虫属", latin:"Dugesia",
-                    children:[
-                      { title:"三角真涡虫", badge:"种", species:true, latin:"Dugesia japonica", traits:"再生研究的模式生物，切断后可长成完整个体。"}
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      { title:"日本血吸虫", badge:"种", species:true, latin:"Schistosoma japonicum", traits:"吸虫纲，引发血吸虫病，生活史需钉螺宿主。"},
-      { title:"猪带绦虫", badge:"种", species:true, latin:"Taenia solium", traits:"绦虫纲，成虫寄生人体小肠，幼虫致囊虫病。"}
-    ]
-  },
-  {
-    title:"线形动物门", badge:"门", phylum:"线形动物门", latin:"Nematoda",
-    desc:"体表有角质层，圆柱形，有口有肛门，假体腔。",
-    children:[
-      { title:"色矛纲", badge:"纲", className:"色矛纲", latin:"Chromadorea", desc:"种类最多，含自由生活与寄生种类。",
-        children:[
-          { title:"小杆目", badge:"目", order:"小杆目", latin:"Rhabditida",
-            children:[
-              { title:"小杆科", badge:"科", family:"小杆科", latin:"Rhabditidae",
-                children:[
-                  { title:"杆形线虫属", badge:"属", genus:"Caenorhabditis", latin:"Caenorhabditis",
-                    children:[
-                      { title:"秀丽隐杆线虫", badge:"种", species:true, latin:"Caenorhabditis elegans", traits:"首个完成全基因组测序的多细胞动物，发育生物学模式生物。"}
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      { title:"人蛔虫", badge:"种", species:true, latin:"Ascaris lumbricoides", traits:"蛔目，人体最大寄生线虫，感染率超10亿人。"},
-      { title:"旋毛虫", badge:"种", species:true, latin:"Trichinella spiralis", traits:"旋毛目，幼虫寄生肌肉，致旋毛虫病。"}
-    ]
-  },
-  {
-    title:"环节动物门", badge:"门", phylum:"环节动物门", latin:"Annelida",
-    desc:"身体分节，具真体腔，闭管式循环系统。",
-    children:[
-      { title:"寡毛纲", badge:"纲", className:"寡毛纲", latin:"Oligochaeta", desc:"刚毛直接着生体壁，无疣足。",
-        children:[
-          { title:"单向蚓目", badge:"目", order:"单向蚓目", latin:"Haplotaxida",
-            children:[
-              { title:"正蚓科", badge:"科", family:"正蚓科", latin:"Lumbricidae",
-                children:[
-                  { title:"环毛蚓属", badge:"属", genus:"Pheretima", latin:"Pheretima",
-                    children:[
-                      { title:"参环毛蚓", badge:"种", species:true, latin:"Pheretima aspergillum", traits:"中国药用蚯蚓主力，《本草纲目》称“地龙”。"}
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      { title:"医蛭", badge:"种", species:true, latin:"Hirudo medicinalis", traits:"蛭纲，古代放血疗法工具，唾液含抗凝血蛭素。"},
-      { title:"沙蚕", badge:"种", species:true, latin:"Perinereis aibuhitensis", traits:"多毛纲，海洋底栖饵料生物，具疣足和刚毛。"}
-    ]
-  },
-  {
-    title:"软体动物门", badge:"门", phylum:"软体动物门", latin:"Mollusca",
-    desc:"身体分头、足、内脏团、外套膜，多数具贝壳。",
-    children:[
-      { title:"腹足纲", badge:"纲", className:"腹足纲", latin:"Gastropoda", desc:"头部发达，足部肌肉质，多数具螺旋贝壳。",
-        children:[
-          { title:"新腹足目", badge:"目", order:"新腹足目", latin:"Neogastropoda",
-            children:[
-              { title:"骨螺科", badge:"科", family:"骨螺科", latin:"Muricidae",
-                children:[
-                  { title:"荔枝螺属", badge:"属", genus:"Thais", latin:"Thais",
-                    children:[
-                      { title:"疣荔枝螺", badge:"种", species:true, latin:"Thais clavigera", traits:"潮间带常见捕食者，以藤壶为食。"}
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      { title:"大王乌贼", badge:"种", species:true, latin:"Architeuthis dux", traits:"现存最大无脊椎动物，深海巨型头足类。"},
-      { title:"珍珠贝", badge:"种", species:true, latin:"Pinctada fucata", traits:"人工育珠主力，外套膜分泌珍珠质。"}
-    ]
-  },
-  {
-    title:"节肢动物门", badge:"门", phylum:"节肢动物门", latin:"Arthropoda",
-    desc:"外骨骼、身体分节分部、附肢分节，种类占动物界80%以上。",
-    children:[
-      { title:"昆虫纲", badge:"纲", className:"昆虫纲", latin:"Insecta", desc:"头胸腹三段，6足2对翅。",
-        children:[
-          { title:"鳞翅目", badge:"目", order:"鳞翅目", latin:"Lepidoptera",
-            children:[
-              { title:"凤蝶科", badge:"科", family:"凤蝶科", latin:"Papilionidae",
-                children:[
-                  { title:"凤蝶属", badge:"属", genus:"Papilio", latin:"Papilio",
-                    children:[
-                      { title:"金凤蝶", badge:"种", species:true, latin:"Papilio machaon", traits:"全球分布最广的凤蝶，幼虫取食伞形科植物。"}
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      { title:"中华绒螯蟹", badge:"种", species:true, latin:"Eriocheir sinensis", traits:"甲壳亚门，长江流域著名河蟹，具螯足和鳃腔。"},
-      { title:"帝王蝎", badge:"种", species:true, latin:"Pandinus imperator", traits:"蛛形纲，最大毒蝎之一，毒液对人类低毒。"}
-    ]
-  },
-  {
-    title:"棘皮动物门", badge:"门", phylum:"棘皮动物门", latin:"Echinodermata",
-    desc:"成体五辐射对称，具水管系统，内骨骼由碳酸钙骨板构成。",
-    children:[
-      { title:"海星纲", badge:"纲", className:"海星纲", latin:"Asteroidea", desc:"5腕辐射对称，具管足和叉棘。",
-        children:[
-          { title:"钳棘目", badge:"目", order:"钳棘目", latin:"Forcipulatida",
-            children:[
-              { title:"蛇海星科", badge:"科", family:"蛇海星科", latin:"Ophidiasteridae",
-                children:[
-                  { title:"多棘海盘车属", badge:"属", genus:"Asterias", latin:"Asterias",
-                    children:[
-                      { title:"多棘海盘车", badge:"种", species:true, latin:"Asterias amurensis", traits:"北太平洋常见海星，可再生断腕。"}
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      { title:"马粪海胆", badge:"种", species:true, latin:"Strongylocentrotus nudus", traits:"海胆纲，经济食用海胆，壳呈半球形。"},
-      { title:"梅花参", badge:"种", species:true, latin:"Thelenota ananas", traits:"海参纲，最大食用海参之一，体表具梅花状疣足。"}
-    ]
-  },
-  {
-    title:"脊索动物门", badge:"门", phylum:"脊索动物门", latin:"Chordata",
-    desc:"胚胎期具脊索、背神经管、鳃裂，脊椎动物亚门占绝对优势。",
-    children:[
-      { title:"脊椎动物亚门", badge:"亚门", subphylum:"脊椎动物亚门", latin:"Vertebrata",
-        children:[
-          { title:"哺乳纲", badge:"纲", className:"哺乳纲", latin:"Mammalia", desc:"胎生、哺乳、体表被毛。",
-            children:[
-              { title:"灵长目", badge:"目", order:"灵长目", latin:"Primates",
-                children:[
-                  { title:"人科", badge:"科", family:"人科", latin:"Hominidae",
-                    children:[
-                      { title:"人属", badge:"属", genus:"Homo", latin:"Homo",
-                        children:[
-                          { title:"智人", badge:"种", species:true, latin:"Homo sapiens", traits:"现代人类唯一现存物种。"}
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      { title:"文昌鱼", badge:"种", species:true, latin:"Branchiostoma lanceolatum", traits:"头索亚门，脊索贯穿全身，无真正脊椎。"},
-      { title:"大马哈鱼", badge:"种", species:true, latin:"Oncorhynchus keta", traits:"鱼纲，溯河洄游典型代表，幼体在淡水生长，成体入海。"}
-    ]
-  }
-];
-
-function showHomePage(){
-  document.getElementById('tree-page').classList.add('hidden');
-  document.getElementById('home-page').classList.remove('hidden');
-}
-
-function showTreePage(){
-  document.getElementById('home-page').classList.add('hidden');
-  document.getElementById('tree-page').classList.remove('hidden');
-  renderTreePage();
-}
-
-function openTreeAndFocus(title){
-  showTreePage();
-  setTimeout(() => {
-    const found = findNodeByTitle(title);
-    if(found) openNodeView(found);
-  }, 100);
-}
-
-function searchInHome(){
-  const keyword = document.getElementById('homeSearch').value.trim().toLowerCase();
-  if(!keyword) return;
-  showTreePage();
-  document.getElementById('treeSearch').value = keyword;
-  renderTreePage();
-}
-
-function isMatch(node, keyword){
-  if(!keyword) return true;
-  return [node.title, node.latin, node.desc, node.traits, node.phylum, node.className, node.order, node.family, node.genus, node.subphylum]
-    .filter(Boolean)
-    .some(v => String(v).toLowerCase().includes(keyword));
-}
-
-function renderTreePage(){
-  const keyword = document.getElementById('treeSearch').value.trim().toLowerCase();
-  const root = document.getElementById('treeRoot');
-  root.innerHTML = '';
-  taxonomy.forEach(node => {
-    const rendered = renderNode(node, keyword);
-    if(rendered) root.appendChild(rendered);
-  });
-  if(!root.children.length){
-    root.innerHTML = `<div style="color:var(--soft);padding:12px 4px;">没有找到匹配结果。</div>`;
-  }
-}
-
-function renderNode(node, keyword){
-  const hasChildren = node.children && node.children.length;
-  const selfVisible = isMatch(node, keyword);
-  let childrenRendered = [];
-
-  if(hasChildren){
-    node.children.forEach(child => {
-      const rendered = renderNode(child, keyword);
-      if(rendered) childrenRendered.push(rendered);
-    });
-  }
-
-  if(!selfVisible && !childrenRendered.length) return null;
-
-  const wrap = document.createElement('div');
-  wrap.className = 'node-card open';
-  wrap.innerHTML = `
-    <div class="node-row">
-      <div class="node-left">
-        ${hasChildren ? `<button class="toggle-btn" onclick="toggleNode(this);event.stopPropagation();"><i class="fa-solid fa-chevron-down"></i></button>` : `<span style="width:28px"></span>`}
-        <div>
-          <div class="node-title">${node.title}</div>
-          <div style="font-size:12px;color:var(--soft);margin-top:3px;">${node.latin || ''}</div>
+<div id="family-view" class="hidden">
+    <div class="family-header">
+        <button class="back-btn" onclick="showHome()">返回首页</button>
+    </div>
+    <div class="family-content">
+        <div class="family-hero">
+            <h2 id="familyTitle">分类科</h2>
+            <p id="familyDesc">这里展示该科下的物种列表与基本说明。</p>
         </div>
-      </div>
-      <div class="node-badge">${node.badge || ''}</div>
+        <div id="familyList" class="species-grid"></div>
     </div>
-    <div style="margin-top:8px;font-size:13px;color:var(--soft);line-height:1.7;">
-      ${node.desc || node.traits || ''}
-    </div>
-  `;
+</div>
 
-  if(hasChildren){
-    const childWrap = document.createElement('div');
-    childWrap.className = 'node-children';
-    childrenRendered.forEach(c => childWrap.appendChild(c));
-    wrap.appendChild(childWrap);
-  }
-
-  wrap.onclick = () => openNodeView(node);
-
-  if(keyword && selfVisible){
-    wrap.style.borderColor = 'rgba(211,156,51,0.35)';
-    wrap.style.boxShadow = '0 0 0 3px rgba(211,156,51,0.08)';
-  }
-
-  return wrap;
-}
-
-function toggleNode(btn){
-  const card = btn.closest('.node-card');
-  card.classList.toggle('open');
-  btn.innerHTML = card.classList.contains('open')
-    ? '<i class="fa-solid fa-chevron-down"></i>'
-    : '<i class="fa-solid fa-chevron-right"></i>';
-}
-
-function focusLevel(level, btn){
-  document.querySelectorAll('.tree-chip').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-function expandAll(){
-  document.querySelectorAll('.node-card').forEach(n => n.classList.add('open'));
-  document.querySelectorAll('.toggle-btn').forEach(btn => btn.innerHTML = '<i class="fa-solid fa-chevron-down"></i>');
-}
-
-function collapseAll(){
-  document.querySelectorAll('.node-card').forEach(n => {
-    if(n.querySelector('.node-children')) n.classList.remove('open');
-  });
-  document.querySelectorAll('.toggle-btn').forEach(btn => btn.innerHTML = '<i class="fa-solid fa-chevron-right"></i>');
-}
-
-function openNodeView(node){
-  const panel = document.getElementById('treeDetailContent');
-  const path = buildPath(node);
-
-  panel.innerHTML = `
-    <div class="breadcrumb">${path}</div>
-    <h2 style="margin-top:0;color:var(--primary-dark)">${node.title}</h2>
-    <div class="latin-name">${node.latin || ''}</div>
-
-    <div class="info-tags">
-      ${node.badge ? `<span class="tag-btn">${node.badge}</span>` : ''}
-      ${node.phylum ? `<span class="tag-btn">${node.phylum}</span>` : ''}
-      ${node.subphylum ? `<span class="tag-btn">${node.subphylum}</span>` : ''}
-      ${node.className ? `<span class="tag-btn">${node.className}</span>` : ''}
-      ${node.order ? `<span class="tag-btn">${node.order}</span>` : ''}
-      ${node.family ? `<span class="tag-btn">${node.family}</span>` : ''}
-      ${node.genus ? `<span class="tag-btn">${node.genus}</span>` : ''}
+<div id="detail-view" class="hidden">
+    <div class="detail-header">
+        <button class="back-btn" onclick="backToPrevious()">返回</button>
+        <button class="back-btn" onclick="showHome()">首页</button>
     </div>
 
-    <p><strong>说明：</strong>${node.desc || node.traits || '暂无说明。'}</p>
+    <div class="detail-content">
+        <div class="model-container">
+            <div class="loading-tip">3D 标本展示</div>
+            <model-viewer id="detailModel" src="" alt="3D Model" auto-rotate camera-controls shadow-intensity="1" environment-image="neutral" exposure="1"></model-viewer>
+        </div>
 
-    <div class="hero-actions" style="margin-top:20px;">
-      <button class="primary-btn" onclick="randomExplore()"><i class="fa-solid fa-shuffle"></i> 随机下一项</button>
-      ${node.badge === '种' || node.species ? `<button class="secondary-btn" onclick="alert('这里可以继续接入物种图片或3D模型。')"><i class="fa-solid fa-image"></i> 查看物种展示</button>` : ''}
+        <div class="info-panel">
+            <h1 id="detailName">标本名称</h1>
+            <span id="detailLatin" class="info-latin"></span>
+
+            <div class="info-tags" id="detailTags"></div>
+
+            <div class="info-row">
+                <span class="info-label">分类地位</span>
+                <p class="info-value" id="detailTaxonomy"></p>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">形态特征</span>
+                <p class="info-value" id="detailDesc"></p>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">生活习性</span>
+                <p class="info-value" id="detailHabit"></p>
+            </div>
+
+            <div class="share-box">
+                <div style="font-weight:600;color:var(--primary-dark);">分享链接</div>
+                <input id="shareLink" type="text" readonly />
+                <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+                    <button class="btn btn-primary" onclick="copyLink()">复制链接</button>
+                </div>
+            </div>
+        </div>
     </div>
-  `;
-}
+</div>
 
-function buildPath(node){
-  const parts = [];
-  if(node.phylum) parts.push(node.phylum);
-  if(node.subphylum) parts.push(node.subphylum);
-  if(node.className) parts.push(node.className);
-  if(node.order) parts.push(node.order);
-  if(node.family) parts.push(node.family);
-  if(node.genus) parts.push(node.genus);
-  if(node.title) parts.push(node.title);
-  return '动物界 / ' + parts.join(' / ');
-}
+<script src="data/porifera.js"></script>
+<script src="data/cnidaria.js"></script>
+<script src="data/platyhelminthes.js"></script>
+<script src="data/nematoda.js"></script>
+<script src="data/annelida.js"></script>
+<script src="data/mollusca.js"></script>
+<script src="data/arthropoda.js"></script>
+<script src="data/echinodermata.js"></script>
+<script src="data/chordata.js"></script>
+<script src="data/taxonomy-loader.js"></script>
 
-function findNodeByTitle(title){
-  let found = null;
-  function walk(arr){
-    for(const n of arr){
-      if(n.title === title){ found = n; return; }
-      if(n.children) walk(n.children);
-      if(found) return;
-    }
-  }
-  walk(taxonomy);
-  return found;
-}
-
-function randomExplore(){
-  const leaves = [];
-  function collect(arr){
-    arr.forEach(n => {
-      if(n.badge === '种' || n.species) leaves.push(n);
-      if(n.children) collect(n.children);
-    });
-  }
-  collect(taxonomy);
-  if(!leaves.length) return;
-  const item = leaves[Math.floor(Math.random() * leaves.length)];
-
-  if(document.getElementById('tree-page').classList.contains('hidden')){
-    showTreePage();
-    setTimeout(() => openNodeView(item), 120);
-  }else{
-    openNodeView(item);
-  }
-}
-
-// 初始化
-showHomePage();
-renderTreePage();
-</script>
+<script src="app.js"></script>
 </body>
 </html>
